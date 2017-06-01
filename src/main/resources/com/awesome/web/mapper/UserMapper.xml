@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.awesome.web.mapper.UserMapper">
+    <resultMap id="BaseResultMap" type="com.awesome.web.domain.User">
+        <id column="uid" jdbcType="INTEGER" property="uid" />
+        <result column="username" jdbcType="VARCHAR" property="username" />
+        <result column="password" jdbcType="VARCHAR" property="password" />
+        <result column="name" jdbcType="VARCHAR" property="name" />
+        <result column="mobile" jdbcType="VARCHAR" property="mobile" />
+        <result column="office_phone" jdbcType="VARCHAR" property="office_phone" />
+        <result column="email" jdbcType="VARCHAR" property="email" />
+        <result column="depart" jdbcType="VARCHAR" property="depart" />
+        <result column="major" jdbcType="VARCHAR" property="major" />
+        <result column="sex" jdbcType="INTEGER" property="sex" />
+        <result column="status" jdbcType="INTEGER" property="status" />
+    </resultMap>
+    <select id="queryByUsername" parameterType="string" resultType="com.awesome.web.domain.User">
+        SELECT * FROM  USER  WHERE  username = #{username}
+    </select>
+</mapper>

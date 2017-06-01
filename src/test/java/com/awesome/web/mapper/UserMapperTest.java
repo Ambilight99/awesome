@@ -1,4 +1,4 @@
-package com.awesome.web.dao;
+package com.awesome.web.mapper;
 
 import com.alibaba.fastjson.JSON;
 import com.awesome.MybatisDemoApplicationTests;
@@ -10,7 +10,6 @@ import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.test.annotation.Rollback;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
@@ -68,5 +67,10 @@ public class UserMapperTest extends MybatisDemoApplicationTests {
 
     }
 
+    @Test
+    public void queryByUsernameTest(){
+        User user = userMapper.queryByUsername("fxw");
+        logger.info(JSON.toJSONString(user));
+    }
 
 }

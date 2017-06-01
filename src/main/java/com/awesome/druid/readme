@@ -1,0 +1,18 @@
+druid监控配置
+
+1、添加Maven依赖 (或jar包)
+		<dependency>
+			<groupId>com.alibaba</groupId>
+			<artifactId>druid</artifactId>
+			<version>1.0.26</version>
+        </dependency>
+
+2、配置数据源相关信息
+    application.properties
+
+3、配置Servlet 和 Filter
+    DruidStatViewServlet   需要继承  StatViewServlet
+    DruidStatFilter        需要继承  WebStatFilter
+
+4、访问地址
+   localhost:8080/durid/index.html

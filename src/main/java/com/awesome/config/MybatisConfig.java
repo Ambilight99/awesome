@@ -2,6 +2,7 @@ package com.awesome.config;
 
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.mybatis.spring.SqlSessionFactoryBean;
+import org.mybatis.spring.SqlSessionTemplate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,7 +24,7 @@ import java.io.IOException;
 /**
  * @author adam
  * @ClassName MybatisConfig
- * @Description
+ * @Description  mybatis配置，该段代码可以去除，spring-boot会自动配置
  * @create 2017/5/31 19:28
  */
 @Configuration
@@ -57,6 +58,7 @@ public class MybatisConfig implements TransactionManagementConfigurer {
 
             sqlSessionFactoryBean.setConfigLocation( new DefaultResourceLoader().getResource(configLocation));
 
+            logger.info("获取sqlSeesionFactory");
             return sqlSessionFactoryBean.getObject();
         } catch (IOException e) {
             logger.warn("mybatis resolver mapper*xml is error");
@@ -69,7 +71,12 @@ public class MybatisConfig implements TransactionManagementConfigurer {
 
     }
 
-    @Override
+    @Bean
+    public SqlSessionTemplate sqlSessionTemplate(SqlSessionFactory sqlSessionFactory) {
+        return new SqlSessionTemplate(sqlSessionFactory);
+    }
+
+    @Bean
     public PlatformTransactionManager annotationDrivenTransactionManager() {
         return new DataSourceTransactionManager(dataSource);
     }

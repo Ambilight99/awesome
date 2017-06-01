@@ -19,7 +19,7 @@ public class User implements Serializable{
 
     private String mobile;
 
-    private String office_phone;
+    private String officePhone;
 
     private String email;
 
@@ -72,12 +72,12 @@ public class User implements Serializable{
         this.mobile = mobile == null ? null : mobile.trim();
     }
 
-    public String getOffice_phone() {
-        return office_phone;
+    public String getOfficePhone() {
+        return officePhone;
     }
 
-    public void setOffice_phone(String office_phone) {
-        this.office_phone = office_phone == null ? null : office_phone.trim();
+    public void setOfficePhone(String officePhone) {
+        this.officePhone = officePhone;
     }
 
     public String getEmail() {
