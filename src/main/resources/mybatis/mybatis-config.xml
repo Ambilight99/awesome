@@ -6,6 +6,10 @@
         <property name="dialect" value="mysql" />
     </properties>
     <settings>
+        <!--打印sql日志-->
+        <!--<setting name="logImpl" value="STDOUT_LOGGING"/>-->
+        <!--开启二级缓存 默认值为true-->
+        <!--<setting name="cacheEnabled" value="true" />-->
         <!-- 开启驼峰匹配 -->
         <setting name="mapUnderscoreToCamelCase" value="true"/>
         <!-- 这个配置使全局的映射器启用或禁用缓存。系统默认值是true，设置只是为了展示出来 -->

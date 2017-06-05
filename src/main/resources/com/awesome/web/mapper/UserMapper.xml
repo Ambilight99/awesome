@@ -1,20 +1,82 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.awesome.web.mapper.UserMapper">
+    <!--<cache />   采用ehcache 进行缓存-->
     <resultMap id="BaseResultMap" type="com.awesome.web.domain.User">
         <id column="uid" jdbcType="INTEGER" property="uid" />
         <result column="username" jdbcType="VARCHAR" property="username" />
         <result column="password" jdbcType="VARCHAR" property="password" />
         <result column="name" jdbcType="VARCHAR" property="name" />
         <result column="mobile" jdbcType="VARCHAR" property="mobile" />
-        <result column="office_phone" jdbcType="VARCHAR" property="office_phone" />
+        <result column="office_phone" jdbcType="VARCHAR" property="officePhone" />
         <result column="email" jdbcType="VARCHAR" property="email" />
         <result column="depart" jdbcType="VARCHAR" property="depart" />
         <result column="major" jdbcType="VARCHAR" property="major" />
         <result column="sex" jdbcType="INTEGER" property="sex" />
         <result column="status" jdbcType="INTEGER" property="status" />
+        <collection property="roles" ofType="com.awesome.web.domain.Role">
+            <id column="role_id" property="id" />
+            <result column="role_name" property="name" />
+            <collection property="resources" ofType="com.awesome.web.domain.Resource">
+                <id column="resource_id" property="id" />
+                <result column="resource_name" property="name" />
+                <result column="resource_url" property="url" />
+            </collection>
+        </collection>
     </resultMap>
-    <select id="queryByUsername" parameterType="string" resultType="com.awesome.web.domain.User">
-        SELECT * FROM  USER  WHERE  username = #{username}
+
+    <select id="queryByUsername" parameterType="string" resultMap="BaseResultMap">
+        SELECT u.*,
+        ro.id role_id, ro.name role_name,
+        re.id resource_id,re.name resource_name, re.url resource_url FROM user u
+        left join user_role ur on ur.user_id= u.uid
+        left join role ro on ro.id=ur.role_id
+        left join role_resource rr on rr.role_id=ro.id
+        left join resource re  on rr.resource_id=re.id
+        WHERE u.username=#{username}
+    </select>
+
+
+
+    <!--延迟加载结果 -->
+    <resultMap id="fetchResultMap" type="com.awesome.web.domain.User">
+        <id column="uid" jdbcType="INTEGER" property="uid" />
+        <result column="username" jdbcType="VARCHAR" property="username" />
+        <result column="password" jdbcType="VARCHAR" property="password" />
+        <result column="name" jdbcType="VARCHAR" property="name" />
+        <result column="mobile" jdbcType="VARCHAR" property="mobile" />
+        <result column="office_phone" jdbcType="VARCHAR" property="officePhone" />
+        <result column="email" jdbcType="VARCHAR" property="email" />
+        <result column="depart" jdbcType="VARCHAR" property="depart" />
+        <result column="major" jdbcType="VARCHAR" property="major" />
+        <result column="sex" jdbcType="INTEGER" property="sex" />
+        <result column="status" jdbcType="INTEGER" property="status" />
+        <collection property="roles" column="uid" ofType="com.awesome.web.domain.Role"
+                    select="queryRolesByUid" fetchType="lazy">   <!--lazy懒加载，eager 急加载 -->
+        </collection>
+    </resultMap>
+    <!--延迟加载的结果集 -->
+    <resultMap id="rolesResultMap" type="com.awesome.web.domain.Role">
+        <id column="id" property="id" />
+        <result column="name" property="name" />
+    </resultMap>
+    <!--延迟查询用户信息 -->
+    <select id="queryFetchByUsername" parameterType="string" resultMap="fetchResultMap">
+        SELECT u.* FROM user u
+        WHERE u.username=#{username}
+    </select>
+    <!--延迟查询用户的角色信息 -->
+    <select id="queryRolesByUid" resultMap="rolesResultMap">
+        SELECT * from role ro
+          left join user_role ur on ro.id=ur.role_id
+          WHERE  ur.user_id = #{uid}
+    </select>
+
+
+
+
+    <select id="queryByUidXML" resultType="com.awesome.web.domain.User">
+        select * from user  WHERE uid = #{uid}
+
     </select>
 </mapper>

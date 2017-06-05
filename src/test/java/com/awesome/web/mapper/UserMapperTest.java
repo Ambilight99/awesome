@@ -70,7 +70,16 @@ public class UserMapperTest extends MybatisDemoApplicationTests {
     @Test
     public void queryByUsernameTest(){
         User user = userMapper.queryByUsername("fxw");
-        logger.info(JSON.toJSONString(user));
+        user.getRoles().forEach(x-> System.out.println(x.getName()));
+       // logger.info(JSON.toJSONString(user));
+    }
+
+    @Test
+    public void testCache1(){
+        User u1 =userMapper.queryByUid(1);
+        System.out.println("u1-----------");
+        User u2 = userMapper.queryByUid(1);
+        System.out.println("u2");
     }
 
 }

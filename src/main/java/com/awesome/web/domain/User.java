@@ -1,6 +1,8 @@
 package com.awesome.web.domain;
 
 import java.io.Serializable;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * @author adam
@@ -31,6 +33,7 @@ public class User implements Serializable{
 
     private Integer status;
 
+    private Set<Role> roles = new HashSet<>();
 
     public Integer getUid() {
         return uid;
@@ -118,6 +121,14 @@ public class User implements Serializable{
 
     public void setStatus(Integer status) {
         this.status = status;
+    }
+
+    public Set<Role> getRoles() {
+        return roles;
+    }
+
+    public void setRoles(Set<Role> roles) {
+        this.roles = roles;
     }
 
     @Override
