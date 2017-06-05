@@ -65,8 +65,6 @@ public class MyInvocationSecurityMetadataSourceService implements FilterInvocati
             }
 
         }
-        System.out.println("########");
-
     }
 
     /**

@@ -14,6 +14,7 @@ import org.springframework.stereotype.Component;
  * @Description MyUserDetailService类  在这个类中， 你就可以从数据库中读入用户的密码， 角色信息， 是否锁定， 账号是否过期等
  * @create 2017/6/3 14:07
  */
+@Component
 public class MyUserDetailService implements UserDetailsService {
     @Autowired
     private SysUserMapper sysUserMapper;

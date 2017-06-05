@@ -3,6 +3,7 @@ package com.awesome.security;
 import com.awesome.web.domain.system.SysUser;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.web.authentication.SavedRequestAwareAuthenticationSuccessHandler;
+import org.springframework.stereotype.Component;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -15,6 +16,7 @@ import java.io.IOException;
  * @Description
  * @create 2017/6/4 9:48
  */
+@Component
 public class LoginSuccessHandler extends SavedRequestAwareAuthenticationSuccessHandler {
     /**
      * 权限校验成功后
