@@ -1,13 +1,10 @@
-package com.awesome.Resolver;
+package com.awesome.resolver;
 
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.context.annotation.PropertySource;
-import org.springframework.core.io.Resource;
 import org.springframework.web.servlet.View;
 import org.thymeleaf.spring4.view.ThymeleafViewResolver;
 
 import java.io.IOException;
-import java.io.InputStream;
 import java.util.Locale;
 
 /**
@@ -39,9 +36,9 @@ public class MyThymeleafViewResolver extends ThymeleafViewResolver {
         }catch(final IOException e){
             if (logger.isDebugEnabled()) {
                 if (logger.isTraceEnabled()) {
-                    logger.trace("视图名："+resourceName+"{}不存在！");
+                    logger.trace("视图名："+resourceName+"不存在！");
                 }else{
-                    logger.debug("视图名："+resourceName+"{}不存在！");
+                    logger.debug("视图名："+resourceName+"不存在！");
                 }
             }
             return null;
