@@ -1,6 +1,7 @@
 package com.awesome.security;
 
 import com.awesome.web.domain.system.SysUser;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.web.authentication.SavedRequestAwareAuthenticationSuccessHandler;
 import org.springframework.stereotype.Component;
@@ -18,6 +19,10 @@ import java.io.IOException;
  */
 @Component
 public class LoginSuccessHandler extends SavedRequestAwareAuthenticationSuccessHandler {
+
+    @Value("${server.session.timeout}")
+    private int SESSION_TIMEOUT_IN_SECONDS;
+
     /**
      * 权限校验成功后
      * @param request
@@ -36,7 +41,8 @@ public class LoginSuccessHandler extends SavedRequestAwareAuthenticationSuccessH
         System.out.println("IP :"+getIpAddress(request));
         this.setDefaultTargetUrl("/hello"); //登录成功后跳转到hello页面
         this.setAlwaysUseDefaultTargetUrl(true);
-     //   response.sendRedirect("/hello");
+
+        request.getSession().setMaxInactiveInterval(SESSION_TIMEOUT_IN_SECONDS); //设置超时时间
         super.onAuthenticationSuccess(request, response, authentication);
     }
 
