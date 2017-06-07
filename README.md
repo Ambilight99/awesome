@@ -17,11 +17,13 @@
   * MyFilterSecurityInterceptor.java   <br/>
   * LoginSuccessHandler.java   <br/>
 
+ <br/>
 
-##配置中的注意事项
-###1、springboot下面thymeleaf和freemarker两种共存，并且设置thymeleaf的优先级高于freemarker<br/>     [http://blog.csdn.net/qq_15042899/article/details/72885889](http://blog.csdn.net/qq_15042899/article/details/72885889)
 
-###2、springsecurity配置记住我功能<br/>
+## 配置中的注意事项
+### 1、springboot下面thymeleaf和freemarker两种共存，并且设置thymeleaf的优先级高于freemarker<br/>     [http://blog.csdn.net/qq_15042899/article/details/72885889](http://blog.csdn.net/qq_15042899/article/details/72885889)
+
+### 2、springsecurity配置记住我功能<br/>
 ```
 @Configuration
 @EnableWebSecurity			 //开启webSecurity
