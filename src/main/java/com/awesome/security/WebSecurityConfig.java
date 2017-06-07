@@ -5,21 +5,19 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
-import org.springframework.security.authentication.dao.ReflectionSaltSource;
-import org.springframework.security.authentication.encoding.Md5PasswordEncoder;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
-import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.access.intercept.FilterSecurityInterceptor;
+import org.springframework.security.web.authentication.rememberme.JdbcTokenRepositoryImpl;
 
+import javax.sql.DataSource;
 import java.io.UnsupportedEncodingException;
 import java.security.NoSuchAlgorithmException;
-import java.util.Objects;
 
 /**
  * @author adam
@@ -44,7 +42,9 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter  {
         http
             .addFilterBefore(myFilterSecurityInterceptor, FilterSecurityInterceptor.class)//在正确的位置添加我们自定义的过滤器  
             .authorizeRequests()
-                .antMatchers("/home","/resources/**").permitAll()//访问：/home 无需登录认证权限
+                .antMatchers("/home", "/freemarker/**").permitAll()//访问：/home 无需登录认证权限
+                .antMatchers("/static/**","/images/**").permitAll()
+                .antMatchers("/hello2").permitAll()
                 .anyRequest().authenticated() //其他所有资源都需要认证，登陆后访问
                 .and()
             .formLogin()
@@ -53,12 +53,14 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter  {
                 .successHandler( loginSuccessHandler ) //登录成功后可使用loginSuccessHandler存储用户信息，可选。
                 .and()
             .logout()
-                .logoutSuccessUrl("/home") //退出登录后的默认网址是”/home”
+             //   .logoutSuccessUrl("/home") //退出登录后的默认网址是”/home”
+                .logoutSuccessUrl("/login") //退出登录后的默认网址是”/login”
                 .permitAll()
                 .invalidateHttpSession(true)
                 .and()
-            .rememberMe()//登录后记住用户，下次自动登录,数据库中必须存在名为persistent_logins的表
-            .tokenValiditySeconds(1209600);
+            .rememberMe()   //登录后记住用户，下次自动登录,数据库中必须存在名为persistent_logins的表
+            .tokenValiditySeconds( 7*24*60*60 ) //7天自动登录
+            .tokenRepository(tokenRepository() );//指定记住登录信息所使用的数据源
     }
 
     @Override
@@ -108,5 +110,21 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter  {
     @Bean
     public BCryptPasswordEncoder bcryptPasswordEncoder() {
         return new BCryptPasswordEncoder(4);
+    }
+
+
+    @Autowired
+    private DataSource dataSource;
+
+    /**
+     * 记住我功能使用的数据源
+     * spring security 内部都写死了，这里要把 这个DAO 注入
+     * @return
+     */
+    @Bean
+    public JdbcTokenRepositoryImpl tokenRepository(){
+        JdbcTokenRepositoryImpl j=new JdbcTokenRepositoryImpl();
+        j.setDataSource(dataSource);
+        return j;
     }
 }

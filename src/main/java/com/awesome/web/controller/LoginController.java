@@ -2,6 +2,7 @@ package com.awesome.web.controller;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 
 /**
  * @author adam
@@ -12,8 +13,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @Controller
 public class LoginController {
 
-    @RequestMapping("login")
+    @RequestMapping(value = "login" , method = RequestMethod.GET )
     public String login(){
+        System.out.println(21);
         return "login";
     }
 
@@ -25,5 +27,10 @@ public class LoginController {
     @RequestMapping("hello")
     public String hello(){
         return "hello";
+    }
+
+    @RequestMapping("freemarker")
+    public String freemarker() {
+        return "freemarker";
     }
 }
