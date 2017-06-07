@@ -1,12 +1,13 @@
 package com.awesome.config;
 
-import com.awesome.Resolver.MyThymeleafViewResolver;
+import com.awesome.resolver.MyThymeleafViewResolver;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
+import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.ViewControllerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
 import org.springframework.web.servlet.view.freemarker.FreeMarkerViewResolver;
@@ -37,10 +38,8 @@ public class MvcConfig extends WebMvcConfigurerAdapter {
 
     @Bean
     public FreeMarkerViewResolver freeMarkerViewResolverBean(){
-        FreeMarkerViewResolver freeMarkerViewResolver2 =new FreeMarkerViewResolver();
-        BeanUtils.copyProperties(freeMarkerViewResolver,freeMarkerViewResolver2);
-        freeMarkerViewResolver2.setOrder(freemarkerTemplateResolverOrder);
-        return freeMarkerViewResolver2;
+        freeMarkerViewResolver.setOrder(freemarkerTemplateResolverOrder);
+        return freeMarkerViewResolver;
     }
 
     @Bean
@@ -55,5 +54,15 @@ public class MvcConfig extends WebMvcConfigurerAdapter {
     public void addViewControllers(ViewControllerRegistry registry) {
         registry.addViewController("/freemarker/hello2").setViewName("hello2");
         registry.addViewController("/hello2").setViewName("hello2");
+    }
+
+    /**
+     * 对静态资源不处理，直接访问
+     * @param registry
+     */
+    @Override
+    public void addResourceHandlers(ResourceHandlerRegistry registry) {
+        registry.addResourceHandler("/static/**").addResourceLocations("classpath:/static/");
+        super.addResourceHandlers(registry);
     }
 }
