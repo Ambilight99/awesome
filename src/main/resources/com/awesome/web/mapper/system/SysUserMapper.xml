@@ -3,9 +3,12 @@
 <mapper namespace="com.awesome.web.mapper.system.SysUserMapper">
     <!--<cache />   采用ehcache 进行缓存-->
     <resultMap id="BaseResultMap" type="com.awesome.web.domain.system.SysUser">
-        <id column="id" jdbcType="INTEGER" property="id" />
+        <id column="id" jdbcType="BIGINT" property="id" />
         <result column="username" jdbcType="VARCHAR" property="username" />
         <result column="password" jdbcType="VARCHAR" property="password" />
+        <result column="status" jdbcType="INTEGER" property="status" />
+        <result column="create_date" jdbcType="DATE" property="createDate" />
+        <result column="update_date" jdbcType="DATE" property="updateDate" />
         <collection property="roles" ofType="com.awesome.web.domain.system.SysRole">
             <id column="role_id" property="id" />
             <result column="role_name" property="name" />
@@ -17,6 +20,7 @@
         </collection>
     </resultMap>
 
+    <!-- 根据登录名查询用户信息 ，登录时使用 -->
     <select id="findByUsername" parameterType="string" resultMap="BaseResultMap">
         SELECT u.*,
         ro.id role_id, ro.name role_name,
@@ -28,5 +32,11 @@
         WHERE u.username=#{username}
     </select>
 
+    <!-- 根据用户条件进行搜索 -->
+    <select id="listByUser" parameterType="com.awesome.web.mapper.system.SysUserMapper" resultMap="BaseResultMap">
+        select
+            u.id, u.username, u.status, u.create_date, u.update_date
+        from sys_user u
+    </select>
 
 </mapper>

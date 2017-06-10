@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.awesome.web.mapper.system.SysRoleMapper">
+    <!--<cache />   采用ehcache 进行缓存-->
+    <resultMap id="BaseResultMap" type="com.awesome.web.domain.system.SysRole">
+        <id column="id" jdbcType="BIGINT" property="id" />
+        <result column="name" jdbcType="VARCHAR" property="name" />
+        <result column="description" jdbcType="VARCHAR" property="description" />
+        <result column="type" jdbcType="INTEGER" property="type" />
+        <result column="status" jdbcType="INTEGER" property="status" />
+        <result column="create_date" jdbcType="DATE" property="createDate" />
+        <result column="update_date" jdbcType="DATE" property="updateDate" />
+    </resultMap>
+
+    <!-- 根据角色信息查询所有的资源 -->
+    <select id="listByRole" parameterType="com.awesome.web.mapper.system.SysRoleMapper" resultMap="BaseResultMap" >
+       select * from sys_role
+       <where>
+           <if test="name != null">
+               name = #{name}
+           </if>
+       </where>
+    </select>
+
+    <!-- 更新模块信息 -->
+    <insert id="insert" parameterType="com.awesome.web.mapper.system.SysRoleMapper" >
+       INSERT INTO sys_role (`name`, `description`, `type`, `status`)
+          VALUES (#{name}, #{description}, #{type}, 1);
+    </insert>
+
+    <!-- 更新角色信息 -->
+    <update id="update" parameterType="com.awesome.web.mapper.system.SysRoleMapper" >
+        UPDATE sys_role
+        <set>
+            <if test="name != null">
+                `name` = #{name},
+            </if>
+            <if test="description != null">
+                `description` = #{description},
+            </if>
+            <if test="status != null">
+                `status` = #{status},
+            </if>
+        </set>
+        where id = #{id}
+    </update>
+
+    <!-- 删除角色资源关系 -->
+    <delete id="deleteRoleResourceById" parameterType="long">
+        DELETE FROM sys_role_resource WHERE role_id = #{roleId}
+    </delete>
+
+    <!-- 批量添加角色资源关系 -->
+    <insert id="insertRoleResourceBatch" parameterType="list">
+        INSERT INTO sys_role_resource ( `role_id`, `resource_id` )
+            VALUES
+        <foreach collection="list" item="item"  separator=","  >
+            ( #{item.roleId} , #{item.resourceId} )
+        </foreach>
+    </insert>
+</mapper>

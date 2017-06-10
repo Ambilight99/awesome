@@ -39,7 +39,7 @@ public class LoginSuccessHandler extends SavedRequestAwareAuthenticationSuccessH
         //输出登录提示信息
         System.out.println("管理员 " + userDetails.getUsername() + " 登录");
         System.out.println("IP :"+getIpAddress(request));
-        this.setDefaultTargetUrl("/hello"); //登录成功后跳转到hello页面
+        this.setDefaultTargetUrl("/index"); //登录成功后跳转到index页面
         this.setAlwaysUseDefaultTargetUrl(true);
 
         request.getSession().setMaxInactiveInterval(SESSION_TIMEOUT_IN_SECONDS); //设置超时时间

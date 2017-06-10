@@ -1,7 +1,8 @@
 package com.awesome.web.mapper;
 
 import com.awesome.MybatisDemoApplicationTests;
-import com.awesome.web.domain.User;
+import com.awesome.web.domain.system.SysUser;
+import com.awesome.web.mapper.system.SysUserMapper;
 import org.apache.ibatis.session.SqlSession;
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.junit.Test;
@@ -23,14 +24,14 @@ public class SqlSessionTest extends MybatisDemoApplicationTests{
     @Test
     public void testCache1(){
         SqlSession sqlSession = sqlSessionFactory.openSession();
-        UserMapper userMapper = sqlSession.getMapper(UserMapper.class);
+        SysUserMapper userMapper = sqlSession.getMapper(SysUserMapper.class);
 
-        User user1 = userMapper.queryByUid(1);
+ //       SysUser user1 = userMapper.queryByUid(1);
 
-        sqlSession.clearCache();
+ //       sqlSession.clearCache();
 //        userMapper.updateNameByUid(1);
 //        sqlSession.commit();
-        User user2 = userMapper.queryByUid(1);
+//        SysUser user2 = userMapper.queryByUid(1);
         sqlSession.close();
 
     }

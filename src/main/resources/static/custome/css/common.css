@@ -1,0 +1,54 @@
+html,body{
+    height:100%;
+    background: #F5EEFF;
+}
+.container-tree>div, .container-table>div{
+    height:100%;
+    background: #FbFbFb;
+    padding-top: 15px;
+    padding-right: 8px;
+    padding-left: 8px;
+}
+.dataTables_wrapper{
+    padding-bottom: 30px;
+}
+
+.container-tree>div>ul{
+    overflow-y: scroll;
+}
+.ztree{
+    height: 95%;
+}
+
+.menu-navbar{
+    background-color: #7DC5EB;
+    padding: 5px;
+    border-bottom: solid 1px #7DC5EB;
+    border-radius:0px;
+    margin-bottom: 0px;
+}
+
+.a-button{
+    cursor: pointer;
+    text-decoration:none!important;
+}
+
+
+.dropdown-menu>li>a:focus, .dropdown-menu>li>a:hover{
+    background-color: #7DC5EB!important;
+}
+.nav>li>a:focus, .nav>li>a:hover {
+    background-color: #F5EEFF;
+}
+.nav .open>a, .nav .open>a:focus, .nav .open>a:hover{
+    background-color: #F5EEFF;
+}
+
+/** 页脚样式 */
+.container-footer{
+    background-color: #E5E5E5;
+    text-align: center;
+    position:fixed;
+    bottom:0;
+    width: 100%;
+}

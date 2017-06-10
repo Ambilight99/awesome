@@ -15,4 +15,4 @@ druid监控配置
     DruidStatFilter        需要继承  WebStatFilter
 
 4、访问地址
-   localhost:8080/durid/index.templates
+   localhost:8080/上下文/durid/index.templates

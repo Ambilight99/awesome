@@ -15,11 +15,13 @@ import java.util.List;
  * @Description 系统用户
  * @create 2017/6/3 13:57
  */
-public class SysUser implements UserDetails {
+public class SysUser extends BaseBean implements UserDetails {
 
     private Long id;
     private String username;
     private String password;
+    /** 状态 1 有效； 0 无效 */
+    private int status;
     private List<SysRole> roles;
 
     public Long getId() {

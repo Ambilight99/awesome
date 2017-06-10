@@ -1,0 +1,6 @@
+.dataTables_length{
+    padding-top: 0.755em;
+}
+.dataTables_length>label{
+    font-weight: normal!important;
+}

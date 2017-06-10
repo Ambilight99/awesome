@@ -14,10 +14,14 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.access.intercept.FilterSecurityInterceptor;
 import org.springframework.security.web.authentication.rememberme.JdbcTokenRepositoryImpl;
+import org.springframework.security.web.util.matcher.RegexRequestMatcher;
+import org.springframework.security.web.util.matcher.RequestMatcher;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.sql.DataSource;
 import java.io.UnsupportedEncodingException;
 import java.security.NoSuchAlgorithmException;
+import java.util.regex.Pattern;
 
 /**
  * @author adam
@@ -36,15 +40,17 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter  {
     @Autowired
     private MyFilterSecurityInterceptor myFilterSecurityInterceptor;
 
-    //http://localhost:8080/login 输入正确的用户名密码 并且选中remember-me 则登陆成功，转到 index页面
     @Override
     protected void configure(HttpSecurity http) throws Exception {
+        //以下两行代码，取消csrf验证 解决Spring Boot不允许加载iframe的问题
+        http.headers().frameOptions().disable();
+        http.csrf().disable();
+
         http
             .addFilterBefore(myFilterSecurityInterceptor, FilterSecurityInterceptor.class)//在正确的位置添加我们自定义的过滤器  
             .authorizeRequests()
-                .antMatchers("/home", "/freemarker/**").permitAll()//访问：/home 无需登录认证权限
+                .antMatchers("/home", "/system/**").permitAll()//访问：/home 无需登录认证权限
                 .antMatchers("/static/**","/images/**").permitAll()
-                .antMatchers("/hello2").permitAll()
                 .anyRequest().authenticated() //其他所有资源都需要认证，登陆后访问
                 .and()
             .formLogin()
@@ -59,8 +65,8 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter  {
                 .invalidateHttpSession(true)
                 .and()
             .rememberMe()   //登录后记住用户，下次自动登录,数据库中必须存在名为persistent_logins的表
-            .tokenValiditySeconds( 7*24*60*60 ) //7天自动登录
-            .tokenRepository(tokenRepository() );//指定记住登录信息所使用的数据源
+                .tokenValiditySeconds( 7*24*60*60 ) //7天自动登录
+                .tokenRepository(tokenRepository() );//指定记住登录信息所使用的数据源
     }
 
     @Override
@@ -126,5 +132,23 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter  {
         JdbcTokenRepositoryImpl j=new JdbcTokenRepositoryImpl();
         j.setDataSource(dataSource);
         return j;
+    }
+
+
+    @Bean
+    public RequestMatcher requestMatcherBean(){
+        RequestMatcher r = new RequestMatcher() {
+            private Pattern allowedMethods = Pattern.compile("^(GET|HEAD|TRACE|OPTIONS)$");
+            private RegexRequestMatcher unprotectedMatcher = new RegexRequestMatcher("/system", null);
+            @Override
+            public boolean matches(HttpServletRequest request) {
+                if(allowedMethods.matcher(request.getMethod()).matches()){
+                    return false;
+                }
+
+                return !unprotectedMatcher.matches(request);
+            }
+        };
+        return r;
     }
 }

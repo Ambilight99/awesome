@@ -54,6 +54,7 @@ public class MvcConfig extends WebMvcConfigurerAdapter {
     public void addViewControllers(ViewControllerRegistry registry) {
         registry.addViewController("/freemarker/hello2").setViewName("hello2");
         registry.addViewController("/hello2").setViewName("hello2");
+        registry.addViewController("/index").setViewName("index");
     }
 
     /**

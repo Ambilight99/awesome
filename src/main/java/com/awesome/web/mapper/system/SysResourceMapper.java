@@ -18,7 +18,26 @@ import java.util.List;
 @Mapper
 public interface SysResourceMapper {
 
+    /**
+     * 根据角色名查找所有的资源
+     * @param roleName
+     * @return
+     */
     @Select( " select * from sys_resource re , sys_role_resource rr ,sys_role ro " +
             "    WHERE  rr.resource_id=re.id and ro.id=rr.role_id AND ro.name=#{roleName} ")
     List<SysResource> listByRoleName(@Param("roleName") String roleName);
+
+    /**
+     * 查询所有的资源
+     * @param resource
+     * @return
+     */
+    List<SysResource> list(SysResource resource);
+
+    /**
+     * 根据角色id查询所有的资源
+     * @param role
+     * @return
+     */
+    List<SysResource> listByRole(@Param("role") Long role);
 }
