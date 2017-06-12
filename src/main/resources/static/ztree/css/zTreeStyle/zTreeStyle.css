@@ -104,14 +104,20 @@ ul.ztree.zTreeDragUL {margin:0; padding:0; position:absolute; width:auto; height
 }
 
 /* 模块 */
-.ztree li span.button.model_icon_ico_open{margin-right:2px; background: url(../../../custome/images/model_open.png) no-repeat scroll 0 0 transparent; vertical-align:top; *vertical-align:middle}
-.ztree li span.button.model_icon_ico_close{margin-right:2px; background: url(../../../custome/images/model_open.png) no-repeat scroll 0 0 transparent; vertical-align:top; *vertical-align:middle}
-.ztree li span.button.model_icon_ico_docu{margin-right:2px; background: url(../../../custome/images/model_open.png) no-repeat scroll 0 0 transparent; vertical-align:top; *vertical-align:middle}
+.ztree li span.button.model_icon_ico_open{margin-right:2px; background: url(../../../custome/images/icon/model_open.png) no-repeat scroll 0 0 transparent; vertical-align:top; *vertical-align:middle}
+.ztree li span.button.model_icon_ico_close{margin-right:2px; background: url(../../../custome/images/icon/model_open.png) no-repeat scroll 0 0 transparent; vertical-align:top; *vertical-align:middle}
+.ztree li span.button.model_icon_ico_docu{margin-right:2px; background: url(../../../custome/images/icon/model_open.png) no-repeat scroll 0 0 transparent; vertical-align:top; *vertical-align:middle}
 
 /* 资源 */
-.ztree li span.button.url_icon_ico_open{margin-right:2px; background: url(../../../custome/images/url.png) no-repeat scroll 0 0 transparent; vertical-align:top; *vertical-align:middle}
-.ztree li span.button.url_icon_ico_close{margin-right:2px; background: url(../../../custome/images/url.png) no-repeat scroll 0 0 transparent; vertical-align:top; *vertical-align:middle}
-.ztree li span.button.url_icon_ico_docu{margin-right:2px; background: url(../../../custome/images/url.png) no-repeat scroll 0 0 transparent; vertical-align:top; *vertical-align:middle}
+.ztree li span.button.url_icon_ico_open{margin-right:2px; background: url(../../../custome/images/icon/url.png) no-repeat scroll 0 0 transparent; vertical-align:top; *vertical-align:middle}
+.ztree li span.button.url_icon_ico_close{margin-right:2px; background: url(../../../custome/images/icon/url.png) no-repeat scroll 0 0 transparent; vertical-align:top; *vertical-align:middle}
+.ztree li span.button.url_icon_ico_docu{margin-right:2px; background: url(../../../custome/images/icon/url.png) no-repeat scroll 0 0 transparent; vertical-align:top; *vertical-align:middle}
+
+/* 部门图标 */
+.ztree li span.button.department_icon_ico_open{margin-right:2px; background: url(../../../custome/images/icon/department.png) no-repeat scroll 0 0 transparent; vertical-align:top; *vertical-align:middle}
+.ztree li span.button.department_icon_ico_close{margin-right:2px; background: url(../../../custome/images/icon/department.png) no-repeat scroll 0 0 transparent; vertical-align:top; *vertical-align:middle}
+.ztree li span.button.department_icon_ico_docu{margin-right:2px; background: url(../../../custome/images/icon/department.png) no-repeat scroll 0 0 transparent; vertical-align:top; *vertical-align:middle}
+
 
 /* 根节点不可操作 */
 .ztree li span.button.switch.level0 {visibility:hidden; width:1px;}

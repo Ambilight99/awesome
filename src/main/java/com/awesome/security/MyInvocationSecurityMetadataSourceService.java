@@ -4,6 +4,8 @@ import com.awesome.web.domain.system.SysResource;
 import com.awesome.web.domain.system.SysRole;
 import com.awesome.web.mapper.system.SysResourceMapper;
 import com.awesome.web.mapper.system.SysRoleMapper;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.access.ConfigAttribute;
@@ -14,6 +16,7 @@ import org.springframework.security.web.access.intercept.FilterInvocationSecurit
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 import org.springframework.security.web.util.matcher.RequestMatcher;
 import org.springframework.stereotype.Component;
+import org.springframework.util.AntPathMatcher;
 
 import javax.annotation.PostConstruct;
 import java.util.*;
@@ -26,6 +29,7 @@ import java.util.*;
  */
 @Component
 public class MyInvocationSecurityMetadataSourceService implements FilterInvocationSecurityMetadataSource{
+    private static final Logger logger = LoggerFactory.getLogger(MyInvocationSecurityMetadataSourceService.class);
 
     @Autowired
     private SysRoleMapper sysRoleMapper;
@@ -43,7 +47,7 @@ public class MyInvocationSecurityMetadataSourceService implements FilterInvocati
      */
     @PostConstruct
     private void loadResourceDefine(){
-        System.out.println("+++++++++++++++loadResourceDefine+++++++++++");
+        logger.info("MyInvocationSecurityMetadataSource： loadResourceDefine加载系统资源与权限列表");
         resourceMap = new HashMap<>();
         List<SysRole> roles =sysRoleMapper.listAll();
         for(SysRole role : roles){
@@ -91,8 +95,10 @@ public class MyInvocationSecurityMetadataSourceService implements FilterInvocati
                 return resourceMap.get(resURL);
             }
         }
-        return null;
 
+        // 如果在数据库中没有配置资源，返回-1为了用户不能访问
+        // 我的代码在此处配置后，WebSecurityConfig#config的允许访问的url 如/login /home 等也会拦截到
+        return otherFilter(filterInvocation);
     }
 
     /**
@@ -120,4 +126,42 @@ public class MyInvocationSecurityMetadataSourceService implements FilterInvocati
     public boolean supports(Class<?> clazz) {
         return true;
     }
+
+    public static Map<String, Collection<ConfigAttribute>> getResourceMap() {
+        return resourceMap;
+    }
+
+    public static void setResourceMap(Map<String, Collection<ConfigAttribute>> resourceMap) {
+        MyInvocationSecurityMetadataSourceService.resourceMap = resourceMap;
+    }
+
+    /**
+     * 重新加载资源
+     */
+    public void reloadResourceDefine(){
+        logger.info("角色-资源信息改变，重新加载！");
+        this.loadResourceDefine();
+    }
+
+    private Collection<ConfigAttribute> otherFilter(FilterInvocation filterInvocation){
+        String url = filterInvocation.getRequestUrl();
+        // 去掉待请求url参数信息
+        int firstQuestionMarkIndex = url.indexOf("?");
+        if (firstQuestionMarkIndex != -1) {
+            url = url.substring(0, firstQuestionMarkIndex);
+        }
+        AntPathMatcher antPathMatcher = new AntPathMatcher();
+        String[] patterns = {"/home","/login","/static/**","/index","/exception/*"};
+        for (String pattern : patterns ){
+            if(antPathMatcher.match(pattern,url)){
+                return null;
+            }
+        }
+        Collection<ConfigAttribute> atts = new ArrayList<>();
+        atts.add(new SecurityConfig("-1"));
+        return atts;
+    }
+
+
+
 }

@@ -1,18 +1,21 @@
 package com.awesome.security;
 
-import org.springframework.security.access.AccessDecisionManager;
-import org.springframework.security.access.AccessDeniedException;
-import org.springframework.security.access.ConfigAttribute;
-import org.springframework.security.access.SecurityConfig;
+import com.alibaba.fastjson.JSON;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Bean;
+import org.springframework.security.access.*;
+import org.springframework.security.access.vote.AffirmativeBased;
+import org.springframework.security.access.vote.AuthenticatedVoter;
+import org.springframework.security.access.vote.RoleVoter;
 import org.springframework.security.authentication.InsufficientAuthenticationException;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.web.access.expression.WebExpressionVoter;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 
-import java.util.Collection;
-import java.util.Iterator;
-import java.util.Objects;
+import javax.annotation.PostConstruct;
+import java.util.*;
 
 /**
  * @author adam
@@ -52,6 +55,7 @@ import java.util.Objects;
   */
 @Component
 public class MyAccessDecisionManager implements AccessDecisionManager {
+
     /**
      * Resolves an access control decision for the passed parameters.
      *
@@ -66,6 +70,7 @@ public class MyAccessDecisionManager implements AccessDecisionManager {
      */
     @Override
     public void decide(Authentication authentication, Object object, Collection<ConfigAttribute> configAttributes) throws AccessDeniedException, InsufficientAuthenticationException {
+       // System.out.println(JSON.toJSON((FilterInvocation)objecdt));
         if(configAttributes == null){
             return;
         }

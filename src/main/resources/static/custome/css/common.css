@@ -17,7 +17,7 @@ html,body{
     overflow-y: scroll;
 }
 .ztree{
-    height: 95%;
+    height: 93%;
 }
 
 .menu-navbar{
@@ -27,7 +27,9 @@ html,body{
     border-radius:0px;
     margin-bottom: 0px;
 }
-
+.datatable-a-button{
+    padding-top:4px;
+}
 .a-button{
     cursor: pointer;
     text-decoration:none!important;

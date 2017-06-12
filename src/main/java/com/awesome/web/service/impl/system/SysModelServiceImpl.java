@@ -1,6 +1,6 @@
 package com.awesome.web.service.impl.system;
 
-import com.alibaba.fastjson.JSON;
+import com.awesome.web.domain.system.BaseZTree;
 import com.awesome.web.domain.system.ModelResourceTree;
 import com.awesome.web.domain.system.SysModel;
 import com.awesome.web.domain.system.SysResource;
@@ -42,13 +42,13 @@ public class SysModelServiceImpl implements SysModelService {
      * @return
      */
     @Override
-    public List<ModelResourceTree> treeData() {
+    public List<BaseZTree> treeData() {
         List<SysModel> models = sysModelMapper.list();
         List<ModelResourceTree> treeObjs = new ArrayList<>();
         models.forEach(x->{
             treeObjs.add( ModelResourceTree.convert(x) );
         });
-        return ModelResourceTree.treeModel(treeObjs,0L,0);
+        return BaseZTree.treeModel(treeObjs,0L,2);
     }
 
     /**
@@ -57,7 +57,7 @@ public class SysModelServiceImpl implements SysModelService {
      * @return
      */
     @Override
-    public List<ModelResourceTree> resourceTreeData(Long roleId) {
+    public List<BaseZTree> resourceTreeData(Long roleId) {
         Set<Long> resourceIdOfRole = new HashSet<>();  //角色下的所有资源id
         if(roleId!=null){       //查询该模块下的所有资源
             List<SysResource> resourcesOfRole =  sysResourceMapper.listByRole(roleId);
@@ -91,7 +91,7 @@ public class SysModelServiceImpl implements SysModelService {
 
 
 
-        return ModelResourceTree.treeModel(treeObjs,0L,0);
+        return BaseZTree.treeModel(treeObjs,0L,2);
     }
 
     /**

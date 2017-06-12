@@ -1,5 +1,7 @@
 package com.awesome.security;
 
+import com.awesome.security.login.LoginFailHandler;
+import com.awesome.security.login.LoginSuccessHandler;
 import com.awesome.util.Md5SaltUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -7,21 +9,16 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
-import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.security.web.access.intercept.FilterSecurityInterceptor;
 import org.springframework.security.web.authentication.rememberme.JdbcTokenRepositoryImpl;
-import org.springframework.security.web.util.matcher.RegexRequestMatcher;
-import org.springframework.security.web.util.matcher.RequestMatcher;
 
-import javax.servlet.http.HttpServletRequest;
 import javax.sql.DataSource;
 import java.io.UnsupportedEncodingException;
 import java.security.NoSuchAlgorithmException;
-import java.util.regex.Pattern;
+import java.util.Objects;
 
 /**
  * @author adam
@@ -36,6 +33,8 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter  {
     @Autowired
     private LoginSuccessHandler loginSuccessHandler;
     @Autowired
+    private LoginFailHandler loginFailHandler;
+    @Autowired
     private MyUserDetailService myUserDetailsService;
     @Autowired
     private MyFilterSecurityInterceptor myFilterSecurityInterceptor;
@@ -46,23 +45,25 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter  {
         http.headers().frameOptions().disable();
         http.csrf().disable();
 
-        http
-            .addFilterBefore(myFilterSecurityInterceptor, FilterSecurityInterceptor.class)//在正确的位置添加我们自定义的过滤器  
+        http//.addFilterAfter(myFilterSecurityInterceptor, FilterSecurityInterceptor.class)//在正确的位置添加我们自定义的过滤器  
             .authorizeRequests()
-                .antMatchers("/home", "/system/**").permitAll()//访问：/home 无需登录认证权限
-                .antMatchers("/static/**","/images/**").permitAll()
+                .antMatchers("/home","/login","/exception/**").permitAll()//访问：/home 无需登录认证权限
+                .antMatchers("/static/**").permitAll()
                 .anyRequest().authenticated() //其他所有资源都需要认证，登陆后访问
                 .and()
             .formLogin()
                 .loginPage("/login")//指定登录页是”/login”
                 .permitAll()
                 .successHandler( loginSuccessHandler ) //登录成功后可使用loginSuccessHandler存储用户信息，可选。
+                .failureHandler( loginFailHandler )     //登录失败处理
                 .and()
             .logout()
-             //   .logoutSuccessUrl("/home") //退出登录后的默认网址是”/home”
                 .logoutSuccessUrl("/login") //退出登录后的默认网址是”/login”
                 .permitAll()
                 .invalidateHttpSession(true)
+                .and()
+            .exceptionHandling()
+                .accessDeniedPage("/exception/403")
                 .and()
             .rememberMe()   //登录后记住用户，下次自动登录,数据库中必须存在名为persistent_logins的表
                 .tokenValiditySeconds( 7*24*60*60 ) //7天自动登录
@@ -96,6 +97,9 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter  {
 
             @Override
             public boolean matches(CharSequence rawPassword, String encodedPassword) {
+                if(Objects.equals(encodedPassword, "userNotFoundPassword")){
+                    return false;
+                }
                 boolean matche = false;
                 try {
                     matche = Md5SaltUtil.validPassword( (String)rawPassword,encodedPassword);
@@ -132,23 +136,5 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter  {
         JdbcTokenRepositoryImpl j=new JdbcTokenRepositoryImpl();
         j.setDataSource(dataSource);
         return j;
-    }
-
-
-    @Bean
-    public RequestMatcher requestMatcherBean(){
-        RequestMatcher r = new RequestMatcher() {
-            private Pattern allowedMethods = Pattern.compile("^(GET|HEAD|TRACE|OPTIONS)$");
-            private RegexRequestMatcher unprotectedMatcher = new RegexRequestMatcher("/system", null);
-            @Override
-            public boolean matches(HttpServletRequest request) {
-                if(allowedMethods.matcher(request.getMethod()).matches()){
-                    return false;
-                }
-
-                return !unprotectedMatcher.matches(request);
-            }
-        };
-        return r;
     }
 }

@@ -1,8 +1,12 @@
 package com.awesome.web.controller;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+
+import java.util.Map;
 
 /**
  * @author adam
@@ -12,10 +16,13 @@ import org.springframework.web.bind.annotation.RequestMethod;
  */
 @Controller
 public class LoginController {
+    private final static Logger logger = LoggerFactory.getLogger(LoginController.class);
 
-    @RequestMapping(value = "login" , method = RequestMethod.GET )
-    public String login(){
-        System.out.println(21);
+    @RequestMapping(value = {"login"} , method = RequestMethod.GET )
+    public String login(Map map, String error,String username){
+        logger.info("跳转到登录页面!");
+        map.put("error",error);
+        map.put("username",username);
         return "login";
     }
 

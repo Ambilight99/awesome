@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.awesome.web.mapper.system.SysDepartmentMapper">
+    <!--<cache />   采用ehcache 进行缓存-->
+
+    <!-- 插入部门信息 -->
+    <update id="insert" parameterType="com.awesome.web.mapper.system.SysDepartmentMapper" >
+        INSERT INTO sys_department (`name`, `parent`, `description`, `level`, `order`, `status`)
+            VALUES ( #{name}, #{parent}, #{description}, (SELECT level+1 FROM `sys_department` s where s.id =  #{parent} ), 1 , 1);
+    </update>
+
+    <!-- 更新部门信息 -->
+    <update id="update" parameterType="com.awesome.web.mapper.system.SysDepartmentMapper" >
+        UPDATE sys_department
+        <set>
+            <if test="name != null">
+                `name` = #{name},
+            </if>
+            <if test="parent != null">
+                `parent` = #{parent},
+                `level` = (SELECT level+1 FROM `sys_department` s where s.id =  #{parent} ) ,
+            </if>
+            <if test="description != null">
+                `description` = #{description},
+            </if>
+            <if test="order != null">
+                `order` = #{order},
+            </if>
+            <if test="status != null">
+                `status` = #{status},
+            </if>
+        </set>
+        where id = #{id}
+    </update>
+</mapper>

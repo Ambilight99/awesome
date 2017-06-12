@@ -1,11 +1,12 @@
 package com.awesome.web.controller.system;
 
 import com.awesome.web.domain.common.ResultMessage;
-import com.awesome.web.domain.system.ModelResourceTree;
+import com.awesome.web.domain.system.BaseZTree;
 import com.awesome.web.domain.system.SysModel;
 import com.awesome.web.service.system.SysModelService;
 import com.awesome.web.service.system.SysResourceService;
-import com.awesome.web.service.system.SysRoleService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -23,6 +24,7 @@ import java.util.Map;
 @Controller
 @RequestMapping("system/model")
 public class ModelController {
+    private final static Logger logger = LoggerFactory.getLogger(ModelController.class);
 
     @Autowired
     public SysModelService sysModelService;
@@ -61,8 +63,8 @@ public class ModelController {
      */
     @RequestMapping("treeData")
     @ResponseBody
-    public List<ModelResourceTree> treeData(){
-        List<ModelResourceTree> list = sysModelService.treeData();
+    public List<BaseZTree> treeData(){
+        List<BaseZTree> list = sysModelService.treeData();
         return list;
     }
 
@@ -72,8 +74,8 @@ public class ModelController {
      */
     @RequestMapping("resource/treeData")
     @ResponseBody
-    public List<ModelResourceTree> resourceTreeData(Long roleId){
-        List<ModelResourceTree> list = sysModelService.resourceTreeData(roleId);
+    public List<BaseZTree> resourceTreeData(Long roleId){
+        List<BaseZTree> list = sysModelService.resourceTreeData(roleId);
         return list;
     }
 
@@ -85,8 +87,14 @@ public class ModelController {
     @RequestMapping("save")
     @ResponseBody
     public ResultMessage save( SysModel model ){
-        sysModelService.saveOrUpdate(model);
-        return ResultMessage.success(model);
+        try {
+            sysModelService.saveOrUpdate(model);
+            return ResultMessage.success("保存成功！",model);
+        }catch (Exception e){
+            logger.error("保存或更新模块失败！",e);
+            return ResultMessage.success("保存失败！",model);
+        }
+
     }
 
     /**

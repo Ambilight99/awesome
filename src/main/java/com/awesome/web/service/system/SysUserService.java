@@ -18,5 +18,5 @@ public interface SysUserService {
      * 列出所有用户信息
      * @return
      */
-    List<SysUser> list();
+    List<SysUser> list(SysUser user);
 }

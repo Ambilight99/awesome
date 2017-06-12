@@ -2,6 +2,8 @@
  * datatable 自定义初始化通用配置
  */
 $.extend( $.fn.dataTable.defaults, {
+    "processing": true,
+    "serverSide":true,  //后台分页
     "dom": '<"top"f>rt<"bottom"ilp><"clear">',
     // "paging":   false,
     "ordering": false,

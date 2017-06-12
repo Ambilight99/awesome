@@ -40,4 +40,32 @@ public interface SysResourceMapper {
      * @return
      */
     List<SysResource> listByRole(@Param("role") Long role);
+
+    /**
+     * 根据资源条件  查询对应资源
+     * @param resource
+     * @return
+     */
+    SysResource findByResource(SysResource resource);
+
+    /**
+     * 根据资源id 查询对应资源
+     * @param id
+     * @return
+     */
+    SysResource findById(Long id);
+
+    /**
+     * 插入一条资源
+     * @param resource
+     * @return
+     */
+    int insert(SysResource resource);
+
+    /**
+     * 更新一条资源
+     * @param resource
+     * @return
+     */
+    int update(SysResource resource);
 }

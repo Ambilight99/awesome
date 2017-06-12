@@ -35,7 +35,9 @@
                         <th>编号</th>
                         <th>资源名称</th>
                         <th>资源路径</th>
+                        <th>所属模块</th>
                         <th>资源状态</th>
+                        <th>操作</th>
                     </tr>
                     </thead>
                 </table>
@@ -47,11 +49,10 @@
 
 <script>
     var _root = "${root}";
-
     /*--------------------------------------- ztree  -----------------------------------*/
     var _treeId = "tree";
     var _tree = $( "#" + _treeId);
-    var setting = {
+    var _setting = {
         async: {
             enable: true,
             url: _root + "/system/model/treeData",
@@ -75,7 +76,7 @@
         }
     };
     $(document).ready(function(){
-        $.fn.zTree.init( _tree , setting);
+        $.fn.zTree.init( _tree , _setting);
     });
 
     function addHoverDom(treeId, treeNode) {
@@ -146,9 +147,6 @@
      *  拖拽移动后回调
      */
     function onDrop(event, treeId, treeNodes, targetNode, moveType, isCopy){
-        console.log(treeNodes)
-        console.log(targetNode)
-        console.log(moveType)
         var model = {
             id: treeNodes[0].id
         };
@@ -194,8 +192,6 @@
     /*---------------------------------------dataTable -----------------------------------*/
     var _table_url = _root + "/system/resource/loadData";
     var _table = $('#source-table').DataTable( {
-        "processing": true,
-        "serverSide":true,  //后台分页
         "ajax": {
             "url": _table_url
         },
@@ -208,12 +204,24 @@
             },
             {"data": "name"},
             {"data": "url"},
-            {"data": "status"}
+            {"data": "modelName"},
+            {"data": "status"},
+            {
+                "sClass": "text-center",
+                "data": "id",
+                "render": function (data, type, full, meta) {
+                    var model = full.model;
+                    return '<a class="a-button" onclick="editResource(this)"  data-id="' + data + ' ">【编辑】<a />'
+                         + '<a class="a-button" onclick="moveResource('+ model +')" >【移动】<a />';
+                },
+                "bSortable": false
+            }
+
         ],
 
     } );
     //生成添加按钮
-    $(".dataTables_wrapper .top").append("<a class='a-button' onclick='addResource()' >【添加】</a>")
+    $(".dataTables_wrapper .top").append("<div class='datatable-a-button'><a class='a-button' onclick='addResource()' >【添加】</a><div>")
 
     /**
      * 重新加载
@@ -224,6 +232,54 @@
             model : modelId
         };
         _table.ajax.url( _table_url + "?"+ $.param(param) ).load();
+    }
+
+    /**
+     * 添加资源
+     */
+    function addResource(){
+        var url = _root + "/system/resource/add?model="+1;
+        openForm(url,"资源添加");
+    }
+
+    /**
+     * 编辑资源
+     */
+    function editResource(e){
+        var url = _root + "/system/resource/edit?id=" + $(e).data("id");
+        openForm( url ,'资源编辑')
+    }
+
+    /**
+     * 打开资源表单
+     */
+    function openForm(url,title){
+        //弹出一个页面层
+        layer.open({
+            type: 2,
+            title: title,
+            maxmin: true,
+            shadeClose: true, //点击遮罩关闭层
+            area : ['800px' , '280px'],
+            content: url ,
+            btn: ['保存', '取消'],
+            yes: function(index, layero){
+                var iframeWin = window[layero.find('iframe')[0]['name']];
+                var retrunStatus = iframeWin.save();       //从子iframe页面中获取返回值
+                if(retrunStatus){
+                    _table.ajax.reload();
+                    layer.close(index);         //关闭页面
+                }
+            }
+        });
+    }
+
+    /**
+     *
+     * @param e
+     */
+    function moveResource(model){
+        console.log(model);
     }
 </script>
 </html>

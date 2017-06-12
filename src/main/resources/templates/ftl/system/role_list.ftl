@@ -67,9 +67,6 @@
             enable: true,
             url: _root + "/system/model/resource/treeData",
             type:"get"
-        },
-        check: {
-            enable: true
         }
     };
     $(document).ready(function(){
@@ -123,9 +120,6 @@
     /*---------------------------------------dataTable -----------------------------------*/
     var _table_url = _root + "/system/role/loadData";
     var _table = $('#role-table').DataTable( {
-//        "dom": '<"top"<"#aaaa">f>rt<"bottom"ilp><"clear">',
-        "processing": true,
-        "serverSide":true,  //后台分页
         "ajax": {
             "url": _table_url
         },
@@ -160,15 +154,10 @@
                 },
                 "bSortable": false
             }
-        ],
-        buttons: [
-            { extend: "create" },
-
         ]
     } );
-
     //生成添加按钮
-    $(".dataTables_wrapper .top").append("<a class='a-button' onclick='addRole()' >【添加】</a>")
+    $(".dataTables_wrapper .top").append("<div class='datatable-a-button'><a class='a-button' onclick='addRole()' >【添加】</a></div>")
 
     /**
      * 重新加载
@@ -243,9 +232,13 @@
                 otherParam:{
                     roleId: _roleId
                 }
+            },
+            check: {
+                enable: true
             }
         };
         setting = $.extend(true,_setting,setting);
+        console.log(setting)
         $.fn.zTree.init( _tree , setting);
 
         $(".tree-save").show();     //显示保存按钮

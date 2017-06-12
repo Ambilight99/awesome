@@ -22,7 +22,7 @@ public class SysRole extends BaseBean{
     /** 角色类型 system 系统内置不可删除 或者 custom自定义的 */
     private String type;
     /** 角色状态 1 有效， 0  无效 */
-    private int status;
+    private Integer status=1;
 
     private Set<SysUser> users = new HashSet<>();
 

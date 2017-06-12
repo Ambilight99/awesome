@@ -30,4 +30,30 @@ public class SysResourceServiceImpl implements SysResourceService {
     public List<SysResource> list(SysResource resource) {
         return sysResourceMapper.list(resource);
     }
+
+    /**
+     * 根据id查找资源
+     *
+     * @param id
+     * @return
+     */
+    @Override
+    public SysResource findById(Long id) {
+        return sysResourceMapper.findById(id);
+    }
+
+    /**
+     * 保存或者更新资源
+     *
+     * @param resource
+     * @return
+     */
+    @Override
+    public int saveOrUpdate(SysResource resource) {
+        if(resource.getId()==null){
+            return sysResourceMapper.insert(resource);
+        }else{
+            return  sysResourceMapper.update(resource);
+        }
+    }
 }

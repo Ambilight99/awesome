@@ -1,9 +1,12 @@
 package com.awesome.web.controller.system;
 
 import com.awesome.web.domain.common.datatable.DataTablePage;
+import com.awesome.web.domain.common.datatable.DataTableSearch;
 import com.awesome.web.domain.system.SysUser;
 import com.awesome.web.service.system.SysUserService;
 import com.github.pagehelper.PageHelper;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -23,6 +26,8 @@ import java.util.Map;
 @Controller
 @RequestMapping("system/user")
 public class UserController {
+    private final static Logger logger = LoggerFactory.getLogger(UserController.class);
+
     @Autowired
     private SysUserService sysUserService;
 
@@ -32,33 +37,24 @@ public class UserController {
     }
 
     @RequestMapping("add")
-    public String add(){
-        return "system/user_add";
+    public String add(Long department){
+        SysUser user = new SysUser();
+        user.setDepartment(department);
+        user.setStatus(1);
+        return "system/user_form";
+    }
+
+    @RequestMapping("edit")
+    public String edit(Long id){
+
+        return "system/user_form";
     }
 
     @RequestMapping("/loadData")
     @ResponseBody
-    public DataTablePage loadData(){
-        PageHelper.startPage(1,20);
-        List<SysUser> userList = sysUserService.list();
+    public DataTablePage loadData(SysUser user , DataTableSearch search){
+        PageHelper.offsetPage(search.getStart(),search.getLength());
+        List<SysUser> userList = sysUserService.list(user);
         return new DataTablePage(userList);
-    }
-
-    @RequestMapping("/loadData2")
-    @ResponseBody
-    public Map loadData2(){
-        Map map = new HashMap();
-        List list = new ArrayList();
-        for(int i=0;i<10;i++){
-            Map m = new HashMap();
-            m.put("id",i);
-            m.put("username","url"+i);
-            m.put("createDate","title");
-            list.add(m);
-        }
-        map.put("data",list);
-        map.put("recordsTotal",11);
-        map.put("recordsFiltered",11);
-        return map;
     }
 }

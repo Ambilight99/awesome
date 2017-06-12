@@ -8,6 +8,7 @@
         <result column="url" jdbcType="VARCHAR" property="url" />
         <result column="type" jdbcType="INTEGER" property="type" />
         <result column="model" jdbcType="BIGINT" property="model" />
+        <result column="model_name" jdbcType="VARCHAR" property="modelName" />
         <result column="status" jdbcType="INTEGER" property="status" />
         <result column="create_date" jdbcType="DATE" property="createDate" />
         <result column="update_date" jdbcType="DATE" property="updateDate" />
@@ -15,10 +16,10 @@
 
     <!-- 查询所有的资源 -->
     <select id="list" parameterType="com.awesome.web.mapper.system.SysResourceMapper" resultMap="BaseResultMap" >
-       select * from sys_resource
+       select r.*,m.name model_name from sys_resource r LEFT JOIN sys_model m ON  r.model = m.id
        <where>
            <if test="model != null">
-              model = #{model}
+              r.`model` = #{model}
            </if>
        </where>
     </select>
@@ -29,4 +30,37 @@
           where re.id = rr.resource_id AND rr.role_id = #{role}
     </select>
 
+    <!-- 根据资源Id 查询资源 -->
+    <select id="findById" parameterType="long" resultType="com.awesome.web.domain.system.SysResource" >
+        select r.*,m.name model_name from sys_resource r LEFT JOIN sys_model m ON  r.model = m.id  WHERE  r.id = #{id}
+    </select>
+
+    <!-- 保存资源 -->
+    <insert id="insert" parameterType="com.awesome.web.domain.system.SysResource" >
+        INSERT INTO sys_resource(`name`, `url`, `type`, `model`, `status`)
+          VALUES ( #{name}, #{url}, #{type}, #{model} , 1)
+    </insert>
+
+    <!-- 更新资源 -->
+    <update id="update" parameterType="com.awesome.web.domain.system.SysResource">
+        UPDATE sys_resource
+        <set>
+            <if test="name!=null">
+                `name` = #{name} ,
+            </if>
+            <if test="url!=null">
+                `url` = #{url} ,
+            </if>
+            <if test="type!=null">
+                `type` = #{type} ,
+            </if>
+            <if test="model!=null">
+                `model` = #{model} ,
+            </if>
+            <if test="status!=null">
+                `status` = #{status} ,
+            </if>
+        </set>
+        WHERE  id = #{id}
+    </update>
 </mapper>

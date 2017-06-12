@@ -1,6 +1,7 @@
 package com.awesome.web.domain.system;
 
-import java.io.Serializable;
+import org.springframework.web.bind.annotation.RequestParam;
+
 import java.util.HashSet;
 import java.util.Set;
 
@@ -11,6 +12,9 @@ import java.util.Set;
  * @create 2017/3/8 14:31
  */
 public class SysResource extends BaseBean{
+    public final static String URL = "url";
+    public final static String MENU = "menu";
+
     private Long id;
     private String name;
     private String url;
@@ -19,7 +23,9 @@ public class SysResource extends BaseBean{
     /** 资源类型 url 或者menu */
     private String type;
     /** 资源状态 1 有效， 0  无效 */
-    private int status;
+    private Integer status;
+    /** 所属模块 的名称 */
+    private String modelName;
     private Set<SysRole> roles = new HashSet<>();
 
     /***********************************   setter/getter ****************************/
@@ -63,12 +69,20 @@ public class SysResource extends BaseBean{
         this.type = type;
     }
 
-    public int getStatus() {
+    public Integer getStatus() {
         return status;
     }
 
-    public void setStatus(int status) {
+    public void setStatus(Integer status) {
         this.status = status;
+    }
+
+    public String getModelName() {
+        return modelName;
+    }
+
+    public void setModelName(String modelName) {
+        this.modelName = modelName;
     }
 
     public Set<SysRole> getRoles() {

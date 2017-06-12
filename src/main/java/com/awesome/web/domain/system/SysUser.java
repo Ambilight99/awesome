@@ -20,33 +20,16 @@ public class SysUser extends BaseBean implements UserDetails {
     private Long id;
     private String username;
     private String password;
+    private String name;
+    private String sex;
+    private String email;
+    private String phone;
+    private Long department;
     /** 状态 1 有效； 0 无效 */
-    private int status;
+    private Integer status;
     private List<SysRole> roles;
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public void setUsername(String username) {
-        this.username = username;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
-    }
-
-    public List<SysRole> getRoles() {
-        return roles;
-    }
-
-    public void setRoles(List<SysRole> roles) {
-        this.roles = roles;
-    }
+    /** 部门名称 */
+    private String departmentName;
 
     /**
      * Returns the authorities granted to the user. Cannot return <code>null</code>.
@@ -57,7 +40,9 @@ public class SysUser extends BaseBean implements UserDetails {
     public Collection<? extends GrantedAuthority> getAuthorities() {
         List<GrantedAuthority> auths = new ArrayList<>();
         List<SysRole> roles = this.getRoles();
-        roles.forEach(role -> auths.add(new SimpleGrantedAuthority(role.getName())));
+        if(roles!=null){
+            roles.forEach(role -> auths.add(new SimpleGrantedAuthority(role.getName())));
+        }
         return auths;
     }
 
@@ -126,5 +111,86 @@ public class SysUser extends BaseBean implements UserDetails {
     @Override
     public boolean isEnabled() {
         return true;
+    }
+
+    /***********************************************setter/getter**************************************/
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getSex() {
+        return sex;
+    }
+
+    public void setSex(String sex) {
+        this.sex = sex;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public String getPhone() {
+        return phone;
+    }
+
+    public void setPhone(String phone) {
+        this.phone = phone;
+    }
+
+    public Long getDepartment() {
+        return department;
+    }
+
+    public void setDepartment(Long department) {
+        this.department = department;
+    }
+
+    public Integer getStatus() {
+        return status;
+    }
+
+    public void setStatus(Integer status) {
+        this.status = status;
+    }
+
+    public List<SysRole> getRoles() {
+        return roles;
+    }
+
+    public void setRoles(List<SysRole> roles) {
+        this.roles = roles;
+    }
+
+    public String getDepartmentName() {
+        return departmentName;
+    }
+
+    public void setDepartmentName(String departmentName) {
+        this.departmentName = departmentName;
     }
 }

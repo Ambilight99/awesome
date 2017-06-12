@@ -41,6 +41,10 @@ public class MyFilterSecurityInterceptor extends AbstractSecurityInterceptor imp
         invoke(filterInvocation);
     }
 
+    /**
+     * 里面会调用 myAccessDecisionManager 进行权限校验
+     * @param filterInvocation
+     */
     public void invoke(FilterInvocation filterInvocation) {
         InterceptorStatusToken token = super.beforeInvocation(filterInvocation);
         try {

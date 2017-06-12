@@ -1,5 +1,6 @@
 package com.awesome.web.service.system;
 
+import com.awesome.web.domain.system.BaseZTree;
 import com.awesome.web.domain.system.ModelResourceTree;
 import com.awesome.web.domain.system.SysModel;
 import org.springframework.transaction.annotation.Transactional;
@@ -25,13 +26,13 @@ public interface SysModelService {
      * 模块树结构
      * @return
      */
-    List<ModelResourceTree> treeData();
+    List<BaseZTree> treeData();
 
     /**
      * 模块资源树结构
      * @return
      */
-    List<ModelResourceTree> resourceTreeData(Long roleId);
+    List<BaseZTree> resourceTreeData(Long roleId);
 
     /**
      * 保存或者更新

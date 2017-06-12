@@ -29,7 +29,7 @@ public class SysUserServiceImpl implements SysUserService {
      * @return
      */
     @Override
-    public List<SysUser> list() {
-        return sysUserMapper.listByUser(null);
+    public List<SysUser> list(SysUser user) {
+        return sysUserMapper.listByUser(user);
     }
 }

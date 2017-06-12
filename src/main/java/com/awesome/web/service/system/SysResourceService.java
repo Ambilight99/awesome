@@ -20,4 +20,18 @@ public interface SysResourceService {
      * @return
      */
     List<SysResource> list(SysResource resource);
+
+    /**
+     * 根据id查找资源
+     * @param id
+     * @return
+     */
+    SysResource findById(Long id);
+
+    /**
+     * 保存或者更新资源
+     * @param resource
+     * @return
+     */
+    int saveOrUpdate(SysResource resource);
 }

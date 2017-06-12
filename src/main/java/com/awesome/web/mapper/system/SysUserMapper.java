@@ -28,6 +28,6 @@ public interface SysUserMapper {
      * @param user
      * @return
      */
-    List<SysUser> listByUser(@Param("user") SysUser user);
+    List<SysUser> listByUser(SysUser user);
 
 }

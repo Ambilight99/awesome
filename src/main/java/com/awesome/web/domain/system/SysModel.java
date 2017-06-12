@@ -25,7 +25,7 @@ public class SysModel implements Serializable {
     /** 子节点 */
     private List<SysModel> children;
     /** ztree 中是否展开 */
-    private boolean open;
+    private Boolean open;
 
     /***********************************   setter/getter ****************************/
     public Long getId() {
@@ -84,11 +84,11 @@ public class SysModel implements Serializable {
         this.children = children;
     }
 
-    public boolean isOpen() {
+    public Boolean getOpen() {
         return open;
     }
 
-    public void setOpen(boolean open) {
+    public void setOpen(Boolean open) {
         this.open = open;
     }
 }

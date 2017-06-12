@@ -1,4 +1,4 @@
-package com.awesome.security;
+package com.awesome.security.login;
 
 import com.awesome.web.domain.system.SysUser;
 import org.springframework.beans.factory.annotation.Value;
