@@ -48,7 +48,7 @@ public class SysModelServiceImpl implements SysModelService {
         models.forEach(x->{
             treeObjs.add( ModelResourceTree.convert(x) );
         });
-        return BaseZTree.treeModel(treeObjs,0L,2);
+        return BaseZTree.treeModel(treeObjs,"0",2);
     }
 
     /**
@@ -78,7 +78,7 @@ public class SysModelServiceImpl implements SysModelService {
         List<SysResource> resources = sysResourceMapper.list(new SysResource());
         for(SysResource resource : resources){
            for(ModelResourceTree tree : treeObjs){
-               if( Objects.equals( resource.getModel(), tree.getId()) ){
+               if( Objects.equals( resource.getModel().toString(), tree.getId()) ){
                    if(resourceIdOfRole.contains( resource.getId() )){   //如果角色包含，就默认选中
                        tree.getChildren().add(ModelResourceTree.convert(resource,true) );
                    }else{
@@ -87,11 +87,7 @@ public class SysModelServiceImpl implements SysModelService {
                }
            }
         }
-
-
-
-
-        return BaseZTree.treeModel(treeObjs,0L,2);
+        return BaseZTree.treeModel(treeObjs,"0",2);
     }
 
     /**

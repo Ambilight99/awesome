@@ -21,9 +21,10 @@ public class ModelResourceTree extends BaseZTree {
         ModelResourceTree treeObj = new ModelResourceTree();
         if(obj instanceof SysModel){
             SysModel model = (SysModel) obj;
-            treeObj.setId( model.getId() );
+            treeObj.setId( model.getId().toString() );
             treeObj.setName( model.getName() );
             treeObj.setOpen( model.getOpen() );
+            treeObj.setpId( model.getParent().toString());
             treeObj.setParent( model.getParent() );
             treeObj.setChildren(new ArrayList<>());
             treeObj.setType(ModelResourceTree.MODEL);
@@ -31,9 +32,10 @@ public class ModelResourceTree extends BaseZTree {
             treeObj.setOrder( model.getOrder() );
         }else if(obj instanceof SysResource){
             SysResource resource = (SysResource) obj;
-            treeObj.setId( resource.getId() );
+            treeObj.setId( resource.getId().toString() );
             treeObj.setName( resource.getName() );
             treeObj.setOpen( false );
+            treeObj.setpId(resource.getModel().toString());
             treeObj.setParent( resource.getModel() );
             treeObj.setType(ModelResourceTree.RESOURCE);
             treeObj.setIconSkin("url_icon");

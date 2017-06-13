@@ -18,10 +18,12 @@ import java.util.Objects;
  * @create 2017/6/11 11:27
  */
 public class BaseZTree implements Serializable {
-    private Long id;
+    private String id;
     private String name;
     /** 是否展开   */
     private Boolean open;
+    /** 父节点 */
+    private String pId;
     /** 父节点 */
     private Long parent;
     /** 子节点 */
@@ -71,21 +73,21 @@ public class BaseZTree implements Serializable {
      * @return
      */
 
-    private static List<BaseZTree> treeModel(List<? extends  BaseZTree> list, Long rootId ,int curLevel,int openLevel){
+    private static List<BaseZTree> treeModel(List<? extends  BaseZTree> list, String rootId ,int curLevel,int openLevel){
         curLevel++;
         Iterator<? extends BaseZTree> iterator = list.iterator();
         List<BaseZTree> children = new ArrayList<>();
         while(iterator.hasNext()){
             //获取子节点元素
             BaseZTree treeObj = iterator.next();
-            if(Objects.equals( rootId ,treeObj.getParent() )){
+            if(Objects.equals( rootId ,treeObj.getParent().toString() )){
                 if(curLevel <= openLevel ){
                     treeObj.setOpen(true);
                 }
                 children.add( treeObj );
 
                 if(treeObj.getChildren()==null){
-                    treeObj.setChildren(treeModel(list,treeObj.getId(), curLevel ));
+                    treeObj.setChildren(treeModel(list, treeObj.getId(), curLevel ));
                 }else{
                     List<BaseZTree> newObjChildren = treeModel(list,treeObj.getId(), curLevel );
                     newObjChildren.addAll(treeObj.getChildren() );      //让模块靠前，资源靠后
@@ -103,7 +105,7 @@ public class BaseZTree implements Serializable {
      * @param openLevel 默认展开几层
      * @return
      */
-    public static List<BaseZTree> treeModel(List<? extends  BaseZTree> list, Long rootId,int openLevel){
+    public static List<BaseZTree> treeModel(List<? extends  BaseZTree> list, String rootId,int openLevel){
         return treeModel(list, rootId ,0,openLevel);
     }
 
@@ -114,17 +116,19 @@ public class BaseZTree implements Serializable {
      * @return
      */
     public static List<BaseZTree> treeModel(List<? extends  BaseZTree> list,int openLevel){
-        return treeModel(list, 0L ,0,openLevel);
+        return treeModel(list, "0" ,0,openLevel);
     }
 
-    /************************************setter/getter********************************/
-    public Long getId() {
+    public String getId() {
         return id;
     }
 
-    public void setId(Long id) {
-        this.id = id;
+    public void setId(Object id) {
+        this.id = id.toString();
     }
+
+    /************************************setter/getter********************************/
+
 
     public String getName() {
         return name;
@@ -147,6 +151,7 @@ public class BaseZTree implements Serializable {
     }
 
     public void setParent(Long parent) {
+        this.pId = parent.toString();
         this.parent = parent;
     }
 
@@ -188,5 +193,13 @@ public class BaseZTree implements Serializable {
 
     public void setChecked(Boolean checked) {
         this.checked = checked;
+    }
+
+    public String getpId() {
+        return pId;
+    }
+
+    public void setpId(String pId) {
+        this.pId = pId;
     }
 }
