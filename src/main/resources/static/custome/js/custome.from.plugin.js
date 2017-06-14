@@ -91,10 +91,10 @@ $.fn.extend({
            var $treeDiv = $(this).next();
            if($treeDiv.is(":hidden")){
                $treeDiv.show();    //如果元素为隐藏,则将它显现
-               $(this).find("i").removeClass(option.icon);
+               $(this).find("i").removeClass(option.icon).addClass(option.openIcon);
            }else{
                $treeDiv.hide();     //如果元素为显现,则将其隐藏
-               $(this).find("i").addClass(option.openIcon);
+               $(this).find("i").removeClass(option.openIcon).addClass(option.icon);
            }
        });
 
