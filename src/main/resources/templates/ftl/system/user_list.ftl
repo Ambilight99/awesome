@@ -51,6 +51,7 @@
     /*--------------------------------------- ztree  -----------------------------------*/
     var _treeId = "tree";
     var _tree = $( "#" + _treeId);
+    var _defaultSelectTreeNodeId;
     var _setting = {
         async: {
             enable: true,
@@ -75,6 +76,7 @@
             showRemoveBtn: showRemoveBtn     //默认删除按钮
         },
         callback: {
+            onAsyncSuccess :onAsyncSuccess,  //异步加载成功后触发
             onClick : onClick,              //点击按钮
             beforeRename : beforeRename ,   //编辑触发
             beforeRemove : beforeRemove ,   //删除触发
@@ -127,12 +129,32 @@
                 var iframeWin = window[layero.find('iframe')[0]['name']];
                 var model = iframeWin.save();       //从子iframe页面中获取返回值
                 if(model){
-                    var zTree = $.fn.zTree.getZTreeObj( _treeId );
-                    zTree.addNodes(treeNode, {id:model.id , name: model.name, iconSkin:"department_icon"}); //生成一个节点
+                    var treeObj = $.fn.zTree.getZTreeObj( _treeId );
+                   // treeObj.addNodes(treeNode, {id:model.id , name: model.name, iconSkin:"department_icon"}); //生成一个节点
+                    treeObj.reAsyncChildNodes(null, "refresh");
+                    _defaultSelectTreeNodeId =  treeNode.id;
                     layer.close(index);         //关闭页面
                 }
             }
         });
+    }
+
+    /**
+     *  异步加载成功后触发
+     */
+    function onAsyncSuccess(event, treeId, treeNode, msg){
+        //选中根节点
+        var treeObj = $.fn.zTree.getZTreeObj(_treeId);
+        if(_defaultSelectTreeNodeId){
+            var node = treeObj.getNodeByParam("id", _defaultSelectTreeNodeId, null);
+            treeObj.selectNode(node);
+            treeObj.expandNode(node,true,false);
+        }else{
+            var nodes = treeObj.getNodes();
+            if (nodes.length>0) {
+                treeObj.selectNode(nodes[0]);
+            }
+        }
     }
 
     /**
