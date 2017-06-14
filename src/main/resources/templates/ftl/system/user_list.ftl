@@ -54,8 +54,12 @@
     var _setting = {
         async: {
             enable: true,
-            url: _root + "/system/department/treeData",
-            type:"get"
+            url: _root + "/system/department/treeData"
+        },
+        data:{
+            simpleData:{
+                enable:true
+            }
         },
         view: {
             expandSpeed:"",
@@ -64,14 +68,17 @@
             selectedMulti: false
         },
         edit: {
+            removeTitle : "删除",
+            renameTitle : "编辑",
             enable: true,
             showRenameBtn: true,    //默认编辑按钮
             showRemoveBtn: showRemoveBtn     //默认删除按钮
         },
         callback: {
-            onClick : onClick,       //点击按钮
-            onRename : onRename ,   //编辑完成后触发
-            onDrop : onDrop         // 移动后回调
+            onClick : onClick,              //点击按钮
+            beforeRename : beforeRename ,   //编辑触发
+            beforeRemove : beforeRemove ,   //删除触发
+            onDrop : onDrop                 // 移动后回调
         }
     };
     $(document).ready(function(){
@@ -111,11 +118,8 @@
      */
     function addModel(treeNode){
         //弹出一个页面层
-        layer.open({
-            type: 2,
+        layer.openIframe({
             title: '部门添加',
-            maxmin: true,
-            shadeClose: true, //点击遮罩关闭层
             area : ['800px' , '320px'],
             content: _root + "/system/department/add?id="+ treeNode.id ,
             btn: ['保存', '取消'],
@@ -132,32 +136,106 @@
     }
 
     /**
-     *  编辑后回调
+     *  编辑回调
      */
-    function onRename(event, treeId, treeNode, isCancel){
-        var department ={
-            id : treeNode.id,
-            name : treeNode.name
+    function beforeRename(treeId, treeNode, newName, isCancel){
+        var oldName = treeNode.name;
+        if(isCancel || newName == oldName ){
+            return true;
         }
-        editDepartment(department);
+        var info = "是否将部门【"+oldName+"】修改为【"+newName+"】？";
+        layer.confirm(info,
+            {
+                cancel: function(){
+                    treeNode.name = oldName;
+                    $("#"+treeNode.tId+"_span").html(oldName);
+                }
+            },
+            function(index){
+                var department ={
+                    id : treeNode.id,
+                    name : newName
+                }
+                editDepartment(department);
+                layer.close(index);
+            },function () {
+                treeNode.name = oldName;
+                $("#"+treeNode.tId+"_span").html(oldName);
+            }
+        );
+        return true;
     }
+
+    /**
+     * 删除回调
+     */
+    function beforeRemove(treeId, treeNode){
+        if(treeNode.children){
+            layer.warn("存在子部门，请先删除子部门！");
+        }
+        //判断部门是否存在用户。
+        $.ajax({
+            url : _table_url ,
+            data : {
+                department:treeNode.id
+            },
+            success : function(result){
+                if(result && result.recordsFiltered > 0){
+                    var info = "部门【"+treeNode.name+"】存在 "+result.recordsFiltered+" 名用户，不能被删除！"
+                    layer.warn(info);
+                }else{
+                    layer.confirm("是否删除部门【"+treeNode.name+"】",function (index) {
+                        deleteDepartment(treeNode.id);
+                        var treeObj = $.fn.zTree.getZTreeObj(treeId);
+                        treeObj.removeNode(treeNode);
+                        layer.close(index);
+                    });
+                }
+            },
+            error : function(result){
+                layer.warn("操作失败！");
+            }
+        });
+        return false;
+    }
+
+    /**
+     * 删除部门
+     */
+    function deleteDepartment(id){
+        $.ajax({
+           url : _root + "/system/department/delete",
+           data : {
+               id : id
+           },
+           success : function(result){
+               if(result.status){
+                   layer.success(result.message);
+               }else{
+                   layer.success(result.message);
+               }
+
+           }
+        });
+    }
+
 
     /**
      *  拖拽移动后回调
      */
     function onDrop(event, treeId, treeNodes, targetNode, moveType, isCopy){
-        var model = {
+        var department = {
             id: treeNodes[0].id
         };
         //moveType "inner"：成为子节点，"prev"：成为同级前一个节点，"next"：成为同级后一个节点
         if(moveType == "inner"){
-            model.parent = targetNode.id;
+            department.parent = targetNode.id;
         }else if(moveType == "prev"){
-            model.parent = targetNode.parent;
-            model.order = targetNode.order - 1;
+            department.parent = targetNode.parent;
+            department.order = targetNode.order - 1;
         }else if(moveType == "next"){
-            model.parent = targetNode.parent;
-            model.order = targetNode.order + 1;
+            department.parent = targetNode.parent;
+            department.order = targetNode.order + 1;
         }else{
             return;
         }
@@ -175,7 +253,11 @@
             data:department,
             dataType:"json",
             success:function(result){
-                layer.msg(result.message);
+                if(result.status){
+                    layer.success(result.message);
+                }else{
+                    layer.fail(result.message);
+                }
             }
         });
     }
@@ -210,7 +292,7 @@
                 "render": function (data, type, full, meta) {
                     var department = full.department;
                     return '<a class="a-button" onclick="editUser(this)"  data-id="' + data + ' ">【编辑】<a />'
-                            + '<a class="a-button" onclick="moveUser('+ department +')" >【移动】<a />';
+                            + '<a class="a-button" onclick="authorize('+ data +')" >【授权】<a />';
                 },
                 "bSortable": false
             }
@@ -219,7 +301,7 @@
 
     } );
     //生成添加按钮
-    $(".dataTables_wrapper .top").append("<div class='datatable-a-button'><a class='a-button' onclick='addResource()' >【添加】</a><div>")
+    $(".dataTables_wrapper .top").append("<div class='datatable-a-button'><a class='a-button' onclick='addUser()' >【添加】</a><div>")
 
     /**
      * 重新加载
@@ -227,7 +309,8 @@
      */
     function dataTableReload(department){
         var param = {
-            department : department
+            department : department,
+            subdivision : true
         };
         _table.ajax.url( _table_url + "?"+ $.param(param) ).load();
     }
@@ -235,7 +318,7 @@
     /**
      * 添加用户
      */
-    function editUser(){
+    function addUser(){
         var url = _root + "/system/user/add?department="+1;
         openForm(url,"用户添加");
     }
@@ -249,16 +332,13 @@
     }
 
     /**
-     * 打开资源表单
+     * 打开用户表单
      */
     function openForm(url,title){
         //弹出一个页面层
-        layer.open({
-            type: 2,
+        layer.openIframe({
             title: title,
-            maxmin: true,
-            shadeClose: true, //点击遮罩关闭层
-            area : ['800px' , '280px'],
+            area : ['800px' , '500px'],
             content: url ,
             btn: ['保存', '取消'],
             yes: function(index, layero){
@@ -273,11 +353,62 @@
     }
 
     /**
-     *
-     * @param e
+     * 打开授权页面
+     * @param userId
      */
-    function moveResource(model){
-        console.log(model);
+    function authorize(userId){
+        var url = _root + "/system/user/auth/list";
+        $.get(url,{id:userId},function(result){
+            // 遍历所有角色
+            var content= '<div class="role-container">';
+            for(var i= 0; i<result.length; i++){
+                var role = result[i];
+                var checked = role.users.length > 0 ? "checked" :"" ;
+                content += ' <label class="checkbox-inline"><input id="roles" type="checkbox" value="'+role.id+'" '+ checked +'>'+role.name+'</label>';
+            }
+            content +='</div>';
+            openAuthorize(content,"授权",userId);
+        });
+    }
+
+    /**
+     * 打开用户表单
+     */
+    function openAuthorize(content,title,userId){
+        //弹出一个页面层
+        layer.openContent({
+            title: title,
+            area : ['400px' , '200px'],
+            content: content,
+            btn: ['保存', '取消'],
+            yes: function(index, layero){
+                var roles =[1];
+                $("#roles:checked").each(function(index,obj){
+                    var roleId = parseInt( $(obj).val() );
+                    if( roleId && $.inArray(roleId, roles)==-1 ){
+                        roles.push(roleId);
+                    }
+                });
+
+                //保存用户和角色关系到数据库
+                $.ajax({
+                    url : _root + '/system/user/role/save',
+                    type: "post",
+                    data : {
+                        userId:userId,
+                        roles:roles
+                    },
+                    success : function(result){
+                        if(result.status){
+                            layer.close(index);         //关闭页面
+                            layer.success(result.message);
+                        }else{
+                            layer.fail(result.message);
+                        }
+                    }
+                });
+            }
+        });
     }
 </script>
 </html>

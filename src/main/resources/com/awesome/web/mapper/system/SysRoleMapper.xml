@@ -10,6 +10,11 @@
         <result column="status" jdbcType="INTEGER" property="status" />
         <result column="create_date" jdbcType="DATE" property="createDate" />
         <result column="update_date" jdbcType="DATE" property="updateDate" />
+        <collection property="users" ofType="com.awesome.web.domain.system.SysUser">
+            <id column="user_id" property="id" />
+            <result column="user_name" property="name" />
+            <result column="user_username" property="username" />
+        </collection>
     </resultMap>
 
     <!-- 根据角色信息查询所有的资源 -->
@@ -21,6 +26,15 @@
            </if>
        </where>
     </select>
+
+    <!-- 查询所有的角色，并关联用户 -->
+    <select id="authorizationByUserId" parameterType="long" resultMap="BaseResultMap">
+        SELECT r.*,o.* FROM sys_role r
+            LEFT JOIN (
+                SELECT u.id user_id, u.name user_name, u.username user_username, ur.role_id FROM sys_user u, sys_user_role ur WHERE u.id = ur.user_id AND u.id= #{userId}
+         ) o ON r.id = o.role_id
+    </select>
+
 
     <!-- 更新模块信息 -->
     <insert id="insert" parameterType="com.awesome.web.mapper.system.SysRoleMapper" >

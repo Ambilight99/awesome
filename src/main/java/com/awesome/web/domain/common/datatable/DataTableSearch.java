@@ -1,7 +1,11 @@
 package com.awesome.web.domain.common.datatable;
 
 
+import org.springframework.web.bind.annotation.RequestParam;
+
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.List;
 
@@ -13,11 +17,11 @@ import java.util.List;
  */
 public class DataTableSearch implements Serializable {
 
-    private Integer draw;      //重绘次数
-    private Integer start;     //开始位置
-    private Integer length;    //长度
-    private List<Map<Column, String>> columns;
-    private Map<Search, String> search;
+    private Integer draw = 1;      //重绘次数
+    private Integer start = 1;     //开始位置
+    private Integer length = 10;    //长度
+    private List<Map<Column, String>> columns = new ArrayList<>();
+    private Map<Search, String> search = new HashMap<>();
 
     public Integer getDraw() {
         return draw;

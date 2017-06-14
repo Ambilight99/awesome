@@ -1,6 +1,5 @@
 package com.awesome.web.controller.system;
 
-import com.awesome.web.controller.LoginController;
 import com.awesome.web.domain.common.ResultMessage;
 import com.awesome.web.domain.system.BaseZTree;
 import com.awesome.web.domain.system.SysDepartment;
@@ -59,6 +58,19 @@ public class DepartmentController {
         }catch (Exception e){
             logger.error("【部门】保存或者更新错误！",e);
             return ResultMessage.fail("保存失败！",department);
+        }
+
+    }
+
+    @RequestMapping("delete")
+    @ResponseBody
+    public ResultMessage delete(Long id){
+        try {
+            sysDepartmentService.delete(id);
+            return ResultMessage.success("删除成功！");
+        }catch (Exception e){
+            logger.error("【部门】删除错误！",e);
+            return ResultMessage.fail("删除失败！");
         }
 
     }

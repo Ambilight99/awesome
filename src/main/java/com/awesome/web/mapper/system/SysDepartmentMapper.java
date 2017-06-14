@@ -1,6 +1,7 @@
 package com.awesome.web.mapper.system;
 
 import com.awesome.web.domain.system.SysDepartment;
+import org.apache.ibatis.annotations.Delete;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Select;
 import org.springframework.stereotype.Repository;
@@ -36,4 +37,11 @@ public interface SysDepartmentMapper {
      * @return
      */
     int update(SysDepartment department);
+
+    /**
+     * 删除部门
+     * @param id
+     * @return
+     */
+    int delete(Long id);
 }

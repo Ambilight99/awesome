@@ -3,6 +3,7 @@ package com.awesome.web.mapper.system;
 import com.awesome.web.domain.system.SysRole;
 import com.awesome.web.domain.system.SysRoleResource;
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
 import org.springframework.stereotype.Repository;
 
@@ -63,4 +64,11 @@ public interface SysRoleMapper {
      * @return
      */
     int insertRoleResourceBatch(List<SysRoleResource> list);
+
+    /**
+     * 查询所有的角色，并关联用户
+     * @param userId
+     * @return
+     */
+    List<SysRole> authorizationByUserId(@Param(value="userId") Long userId);
 }

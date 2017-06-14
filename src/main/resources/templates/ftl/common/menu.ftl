@@ -1,4 +1,4 @@
-<link rel="stylesheet" type="text/css" href="${root}/static/font-awesome/css/font-awesome.css"/>
+<link rel="stylesheet" type="text/css" href="${root}/static/font-awesome/css/font-awesome.css"/>    <!-- font-awesome 图标库 -->
 <style>
     .nav-right{
         text-align: right;

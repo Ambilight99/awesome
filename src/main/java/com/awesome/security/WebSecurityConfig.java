@@ -4,6 +4,7 @@ import com.awesome.security.login.LoginFailHandler;
 import com.awesome.security.login.LoginSuccessHandler;
 import com.awesome.util.Md5SaltUtil;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -11,8 +12,10 @@ import org.springframework.security.config.annotation.authentication.builders.Au
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.config.annotation.web.configurers.ExpressionUrlAuthorizationConfigurer;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.access.intercept.FilterSecurityInterceptor;
 import org.springframework.security.web.authentication.rememberme.JdbcTokenRepositoryImpl;
 
 import javax.sql.DataSource;
@@ -30,6 +33,9 @@ import java.util.Objects;
 @EnableWebSecurity			 //开启webSecurity
 //@EnableGlobalMethodSecurity(prePostEnabled = true)
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter  {
+    @Value("${security.path.permitall}")
+    private String permitallPaths;  //允许的权限路径
+
     @Autowired
     private LoginSuccessHandler loginSuccessHandler;
     @Autowired
@@ -45,10 +51,16 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter  {
         http.headers().frameOptions().disable();
         http.csrf().disable();
 
-        http//.addFilterAfter(myFilterSecurityInterceptor, FilterSecurityInterceptor.class)//在正确的位置添加我们自定义的过滤器  
+        //从配置文件中读取允许的url路径
+        String[] paths = permitallPaths.split("[,;]");
+        for(String path :paths ){
+            http.authorizeRequests().antMatchers(path).permitAll();
+        }
+
+        http.addFilterAfter(myFilterSecurityInterceptor, FilterSecurityInterceptor.class)//在正确的位置添加我们自定义的过滤器  
             .authorizeRequests()
-                .antMatchers("/home","/login","/exception/**").permitAll()//访问：/home 无需登录认证权限
-                .antMatchers("/static/**").permitAll()
+           //     .antMatchers("/home","/login","/exception/**").permitAll()//访问：/home 无需登录认证权限
+           //     .antMatchers("/static/**").permitAll()
                 .anyRequest().authenticated() //其他所有资源都需要认证，登陆后访问
                 .and()
             .formLogin()

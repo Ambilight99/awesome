@@ -42,4 +42,11 @@ public interface SysRoleService {
      * @return
      */
     int resourceSave(Long roleId, Long[] resourceIds);
+
+    /**
+     *  查询所有的角色，并关联用户
+     * @param userId
+     * @return
+     */
+    List<SysRole> authorizationByUserId(Long userId);
 }

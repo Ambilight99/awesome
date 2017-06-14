@@ -40,6 +40,14 @@
         left join sys_resource re  on rr.resource_id=re.id
         WHERE u.username=#{username}
     </select>
+    
+    <!-- 根据id查询用户信息 -->
+    <select id="findById" resultMap="BaseResultMap">
+        select
+            u.* , d.name department_name
+        from sys_user u left join sys_department d on u.department= d.id
+        WHERE  u.id = #{id}
+    </select>
 
     <!-- 根据用户条件进行搜索 -->
     <select id="listByUser" parameterType="com.awesome.web.domain.system.SysUser" resultMap="BaseResultMap">
@@ -71,4 +79,43 @@
         </where>
     </select>
 
+    <!-- 保存用户 -->
+    <insert id="insert" parameterType="com.awesome.web.domain.system.SysUser" >
+        INSERT INTO sys_user(`username`, `password`, `name`, `sex`, `email`,`phone`,`department`,`status`)
+        VALUES ( #{username}, #{password}, #{name}, #{sex}, #{email}, #{phone}, #{department}, 1)
+    </insert>
+
+    <!--插入用户角色关系 -->
+    <insert id="insertUserRole" parameterType="list" >
+      INSERT INTO sys_user_role( user_id, role_id ) VALUES
+        <foreach collection="list" item="item" separator=","  >
+            ( #{item.userId} , #{item.roleId} )
+        </foreach>
+    </insert>
+
+    <!-- 更新用户 -->
+    <update id="update" parameterType="com.awesome.web.domain.system.SysUser">
+        UPDATE sys_user
+        <set>
+            <if test="name!=null">
+                `name` = #{name} ,
+            </if>
+            <if test="password!=null">
+                `password` = #{password} ,
+            </if>
+            <if test="sex!=null">
+                `sex` = #{sex} ,
+            </if>
+            <if test="email!=null">
+                `email` = #{email} ,
+            </if>
+            <if test="phone!=null">
+                `phone` = #{phone} ,
+            </if>
+            <if test="department!=null">
+                `department` = #{department} ,
+            </if>
+        </set>
+        WHERE  id = #{id}
+    </update>
 </mapper>

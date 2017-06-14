@@ -27,4 +27,11 @@ public interface SysDepartmentService {
      * @return
      */
     int saveOrUpdate(SysDepartment department);
+
+    /**
+     * 删除部门
+     * @param id
+     * @return
+     */
+    int delete(Long id);
 }

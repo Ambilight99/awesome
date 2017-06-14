@@ -31,9 +31,15 @@ public class SysDepartmentServiceImpl implements SysDepartmentService {
         List<SysDepartment> departments = sysDepartmentMapper.list();
         List<BaseZTree> ztree = new ArrayList<>();
         departments.forEach(x->{
-            ztree.add(BaseZTree.convert( x ));
+            BaseZTree z = BaseZTree.convert( x );
+            if( x.getLevel()<=2){
+                z.setOpen(true);
+            }else{
+                z.setOpen(false);
+            }
+            ztree.add(z);
         });
-        return BaseZTree.treeModel(ztree,0L,2);
+        return ztree;//BaseZTree.treeModel(ztree,0L,2);
     }
 
     /**
@@ -49,5 +55,19 @@ public class SysDepartmentServiceImpl implements SysDepartmentService {
         }else{
             return sysDepartmentMapper.update(department);
         }
+    }
+
+    /**
+     * 删除部门
+     *
+     * @param id
+     * @return
+     */
+    @Override
+    public int delete(Long id) {
+        if (id==null){
+            return 0;
+        }
+        return sysDepartmentMapper.delete(id);
     }
 }

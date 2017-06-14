@@ -85,4 +85,15 @@ public class SysRoleServiceImpl implements SysRoleService {
             return sysRoleMapper.insertRoleResourceBatch(roleResources);
         }
     }
+
+    /**
+     * 查询所有的角色，并关联用户
+     *
+     * @param userId
+     * @return
+     */
+    @Override
+    public List<SysRole> authorizationByUserId(Long userId) {
+        return sysRoleMapper.authorizationByUserId(userId);
+    }
 }

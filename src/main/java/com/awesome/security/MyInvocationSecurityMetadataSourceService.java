@@ -7,6 +7,7 @@ import com.awesome.web.mapper.system.SysRoleMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.access.ConfigAttribute;
 import org.springframework.security.access.SecurityConfig;
@@ -30,6 +31,8 @@ import java.util.*;
 @Component
 public class MyInvocationSecurityMetadataSourceService implements FilterInvocationSecurityMetadataSource{
     private static final Logger logger = LoggerFactory.getLogger(MyInvocationSecurityMetadataSourceService.class);
+    @Value("${security.path.permitall}")
+    private String permitallPaths;  //允许的权限路径
 
     @Autowired
     private SysRoleMapper sysRoleMapper;
@@ -151,9 +154,9 @@ public class MyInvocationSecurityMetadataSourceService implements FilterInvocati
             url = url.substring(0, firstQuestionMarkIndex);
         }
         AntPathMatcher antPathMatcher = new AntPathMatcher();
-        String[] patterns = {"/home","/login","/static/**","/index","/exception/*"};
+        String[] patterns = permitallPaths.split("[,;]");
         for (String pattern : patterns ){
-            if(antPathMatcher.match(pattern,url)){
+            if(antPathMatcher.match(pattern.trim(),url)){
                 return null;
             }
         }
