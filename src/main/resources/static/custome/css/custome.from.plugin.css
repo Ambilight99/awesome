@@ -1,0 +1,15 @@
+/**
+  用于表单的样式
+ */
+
+/* 下拉树的样式 */
+.select_tree{
+    cursor: pointer;
+}
+.select_tree + div {
+    display: none;
+    border: solid 1px #CCCCCC;
+    max-height: 200px;
+    overflow-y: scroll
+}
+
