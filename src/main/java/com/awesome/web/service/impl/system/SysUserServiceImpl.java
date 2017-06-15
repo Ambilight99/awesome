@@ -2,8 +2,11 @@ package com.awesome.web.service.impl.system;
 
 import com.awesome.util.Md5SaltUtil;
 import com.awesome.web.domain.common.ResultMessage;
+import com.awesome.web.domain.common.datatable.DataTableSearch;
+import com.awesome.web.domain.system.SysDepartment;
 import com.awesome.web.domain.system.SysUser;
 import com.awesome.web.domain.system.SysUserRole;
+import com.awesome.web.mapper.system.SysDepartmentMapper;
 import com.awesome.web.mapper.system.SysUserMapper;
 import com.awesome.web.service.system.SysUserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,6 +29,8 @@ public class SysUserServiceImpl implements SysUserService {
 
     @Autowired
     private SysUserMapper sysUserMapper;
+    @Autowired
+    private SysDepartmentMapper sysDepartmentMapper;
 
 
     /**
@@ -86,4 +91,75 @@ public class SysUserServiceImpl implements SysUserService {
         }
         return 0;
     }
+
+    /**
+     * 删除用户
+     *
+     * @param id
+     * @return
+     */
+    @Override
+    public int deleteById(Long id) {
+        if(id==null){
+            return 0;
+        }
+        SysUser user = new SysUser();
+        user.setId(id);
+        user.setStatus(0);
+        return sysUserMapper.update(user);
+    }
+
+    /**
+     * 根据条件列出所有用户信息
+     *
+     * @param user
+     * @param search
+     * @param subdivision
+     * @return
+     */
+    @Override
+    public List<SysUser> list(SysUser user, DataTableSearch search, boolean subdivision) {
+        List<Long> departments = new ArrayList<>();
+        if(subdivision){
+            departments = this.getAllChildren(user.getDepartment(), sysDepartmentMapper.list() );
+        }else{
+            departments.add( user.getDepartment() );
+        }
+        return sysUserMapper.listBySearch(user,search,departments);
+    }
+
+    /**
+     * 递归获取所有的子节点
+     * @param id
+     * @param departments
+     * @return
+     */
+    private List<Long> getAllChildren(Long id,List<SysDepartment> departments){
+        List<Long> ids = new ArrayList<>();
+        ids.add(id);
+        return this.getAllChildren(ids,departments);
+    }
+
+    /**
+     * 递归获取所有的子节点
+     * @param ids
+     * @param departments
+     * @return
+     */
+    private List<Long> getAllChildren(List<Long> ids,List<SysDepartment> departments){
+        List<Long> childrenIds = new ArrayList<>();
+        if(ids.isEmpty()){
+            return childrenIds;
+        }
+        for( Long id : ids){
+            for( SysDepartment department : departments ){
+                if( Objects.equals(id, department.getParent()) ){
+                    childrenIds.add(department.getId());
+                }
+            }
+        }
+        ids.addAll( getAllChildren(childrenIds,departments) );
+        return ids;
+    }
+
 }

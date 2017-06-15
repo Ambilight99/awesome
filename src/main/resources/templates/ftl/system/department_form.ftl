@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <title>部门表单</title>
     <link rel="shortcut icon" type="image/ico" href="${root}/static/custome/images/favicon.ico">
+    <link rel="stylesheet" type="text/css" href="${root}/static/custome/css/common.css">                    <!-- 自定义的通用样式 -->
     <link rel="stylesheet" type="text/css" href="${root}/static/zui/dist/css/zui.min.css"> <!-- ZUI 标准版压缩后的 CSS 文件 -->
     <link rel="stylesheet" type="text/css" href="${root}/static/jquery-validation-engine/css/validationEngine.jquery.css"> <!-- jquery表单验证插件 样式 -->
 
@@ -19,7 +20,7 @@
     <input type="hidden" name="parent" value="${department.parent?default('')}" />
 
     <div class="form-group">
-        <label for="name" class="col-sm-2">部门名称</label>
+        <label for="name" class="col-sm-2">部门名称<span class="red">*</span></label>
         <div class="col-md-6 col-sm-9">
             <input type="text" class="form-control validate[required,custom[onlyLetterNumber],minSize[2],maxSize[10]]" id="name" name="name" value="${department.name?default('')}" placeholder="部门名称" />
         </div>

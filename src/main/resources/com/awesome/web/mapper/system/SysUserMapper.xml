@@ -79,6 +79,25 @@
         </where>
     </select>
 
+    <!-- 根据条件列出所有用户信息 -->
+    <select id="listBySearch" resultMap="BaseResultMap">
+        <if test="search.searchValue!=null">
+          <bind name="searchValue" value="'%'+search.searchValue+'%'" />
+        </if>
+        <foreach collection="departments" item="department" separator=" UNION ALL ">
+            select
+                d.name department_name , u.*
+            from sys_department d , sys_user u
+            WHERE d.id = #{department}
+              AND u.department= d.id
+              AND u.`status` = 1
+            <if test="search.searchValue!=null">
+                AND ( u.name like #{searchValue} OR  u.username like  #{searchValue} OR  u.phone like  #{searchValue} )
+            </if>
+
+        </foreach>
+    </select>
+
     <!-- 保存用户 -->
     <insert id="insert" parameterType="com.awesome.web.domain.system.SysUser" >
         INSERT INTO sys_user(`username`, `password`, `name`, `sex`, `email`,`phone`,`department`,`status`)
@@ -114,6 +133,9 @@
             </if>
             <if test="department!=null">
                 `department` = #{department} ,
+            </if>
+            <if test="status!=null">
+                `status` = #{status} ,
             </if>
         </set>
         WHERE  id = #{id}

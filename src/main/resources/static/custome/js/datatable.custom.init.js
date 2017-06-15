@@ -17,6 +17,8 @@ $.extend( $.fn.dataTable.defaults, {
                     delete(column.search);
                 }
             }
+            param.searchValue = param.search.value;
+            param.searchRegex = param.search.regex;
         }
     },
     language:{

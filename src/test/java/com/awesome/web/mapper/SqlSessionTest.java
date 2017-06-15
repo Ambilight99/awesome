@@ -10,7 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 /**
  * @author adam
- * @ClassName SqlSessionTest
+ * @ClassName DepartmentTest
  * @Description
  * @create 2017/6/2 10:32
  */

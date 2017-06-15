@@ -1,5 +1,6 @@
 package com.awesome.web.mapper.system;
 
+import com.awesome.web.domain.common.datatable.DataTableSearch;
 import com.awesome.web.domain.system.SysUser;
 import com.awesome.web.domain.system.SysUserRole;
 import org.apache.ibatis.annotations.Delete;
@@ -8,6 +9,7 @@ import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Set;
 
 /**
  * @author adam
@@ -67,4 +69,13 @@ public interface SysUserMapper {
      * @return
      */
     int insertUserRole(List<SysUserRole> list);
+
+    /**
+     * 根据条件列出所有用户信息
+     * @param user
+     * @param search
+     * @param departments
+     * @return
+     */
+    List<SysUser> listBySearch( @Param("user") SysUser user, @Param("search") DataTableSearch search, @Param("departments") List<Long> departments);
 }

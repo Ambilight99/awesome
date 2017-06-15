@@ -8,7 +8,7 @@ var layer = $.extend({},window.layer,{
     warn : function(message){
         layer.msg(message,{icon:0,time:2000});
     },
-    success:function(message){
+    ok:function(message){
         layer.msg(message,{icon:1,time:2000});
     },
     fail : function(message){

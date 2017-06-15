@@ -7,6 +7,7 @@ import com.awesome.web.domain.system.SysRole;
 import com.awesome.web.domain.system.SysUser;
 import com.awesome.web.service.system.SysRoleService;
 import com.awesome.web.service.system.SysUserService;
+import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -16,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -41,9 +43,10 @@ public class UserController {
     }
 
     @RequestMapping("add")
-    public String add(Map map, Long department){
+    public String add(Map map, Long department,String departmentName){
         SysUser user = new SysUser();
         user.setDepartment(department);
+        user.setDepartmentName(departmentName);
         user.setStatus(1);
         map.put("user",user);
         return "system/user_form";
@@ -57,6 +60,24 @@ public class UserController {
     }
 
     /**
+     * 删除用户
+     * @param id
+     * @return
+     */
+    @RequestMapping("delete")
+    @ResponseBody
+    public ResultMessage delete(Long id){
+        try {
+            sysUserService.deleteById(id);
+            return ResultMessage.success("删除成功！");
+        }catch (Exception e){
+            logger.error("【用户】删除错误！",e);
+            return ResultMessage.fail("删除失败！");
+        }
+    }
+
+
+    /**
      * 加载人员信息
      * @param user
      * @param search datatable查询条件
@@ -68,7 +89,13 @@ public class UserController {
     public DataTablePage loadData(SysUser user , DataTableSearch search ,
            @RequestParam(value = "subdivision",defaultValue = "false" ) boolean subdivision){
         PageHelper.offsetPage(search.getStart(),search.getLength());
-        List<SysUser> userList = sysUserService.list(user);
+        user.setStatus(1); //状态为有效的用户
+        List<SysUser> userList = new ArrayList<>();
+        if(user.getDepartment()==null){
+            userList = sysUserService.list(user);
+        }else{
+            userList = sysUserService.list(user,search,true);
+        }
         return new DataTablePage(userList);
     }
 

@@ -1,6 +1,6 @@
 package com.awesome.web.service.system;
 
-import com.awesome.web.domain.common.ResultMessage;
+import com.awesome.web.domain.common.datatable.DataTableSearch;
 import com.awesome.web.domain.system.SysUser;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -45,4 +45,20 @@ public interface SysUserService {
      * @return
      */
     int roleSave(Long[] roles, Long userId);
+
+    /**
+     * 删除用户
+     * @param id
+     * @return
+     */
+    int deleteById(Long id);
+
+    /**
+     * 根据条件列出所有用户信息
+     * @param user
+     * @param search
+     * @param subdivision
+     * @return
+     */
+    List<SysUser> list(SysUser user, DataTableSearch search, boolean subdivision );
 }

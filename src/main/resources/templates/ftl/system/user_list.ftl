@@ -37,7 +37,7 @@
                         <th>用户名</th>
                         <th>手机号</th>
                         <th>所属部门</th>
-                        <th>操作</th>
+                        <th style="width:165px">操作</th>
                     </tr>
                     </thead>
                 </table>
@@ -194,6 +194,7 @@
     function beforeRemove(treeId, treeNode){
         if(treeNode.children){
             layer.warn("存在子部门，请先删除子部门！");
+            return false;
         }
         //判断部门是否存在用户。
         $.ajax({
@@ -205,6 +206,7 @@
                 if(result && result.recordsFiltered > 0){
                     var info = "部门【"+treeNode.name+"】存在 "+result.recordsFiltered+" 名用户，不能被删除！"
                     layer.warn(info);
+                    return false;
                 }else{
                     layer.confirm("是否删除部门【"+treeNode.name+"】",function (index) {
                         deleteDepartment(treeNode.id);
@@ -232,11 +234,10 @@
            },
            success : function(result){
                if(result.status){
-                   layer.success(result.message);
+                   layer.ok(result.message);
                }else{
-                   layer.success(result.message);
+                   layer.fail(result.message);
                }
-
            }
         });
     }
@@ -276,7 +277,7 @@
             dataType:"json",
             success:function(result){
                 if(result.status){
-                    layer.success(result.message);
+                    layer.ok(result.message);
                 }else{
                     layer.fail(result.message);
                 }
@@ -291,7 +292,8 @@
         dataTableReload(treeNode.id)
     }
 
-    /*---------------------------------------dataTable -----------------------------------*/
+    /*****************************************dataTable **************************************************/
+
     var _table_url = _root + "/system/user/loadData";
     var _table = $('#user-table').DataTable( {
         "ajax": {
@@ -314,13 +316,18 @@
                 "render": function (data, type, full, meta) {
                     var department = full.department;
                     return '<a class="a-button" onclick="editUser(this)"  data-id="' + data + ' ">【编辑】<a />'
-                            + '<a class="a-button" onclick="authorize('+ data +')" >【授权】<a />';
+                            + '<a class="a-button" onclick="authorize('+ data +')" >【授权】<a />'
+//                            + '<a class="a-button" onclick="editPassword('+ data +')" >【修改密码】<a />'
+                            + '&nbsp;&nbsp;&nbsp;'
+                            + '<a class="a-button-del" onclick="deleteUser(this)"  data-id="' + data + '" data-username="'+full.username+'"  >【删除】<a />';
                 },
                 "bSortable": false
             }
 
         ],
-
+        language:{
+            searchPlaceholder : "姓名、用户名、手机号"
+        }
     } );
     //生成添加按钮
     $(".dataTables_wrapper .top").append("<div class='datatable-a-button'><a class='a-button' onclick='addUser()' >【添加】</a><div>")
@@ -341,8 +348,15 @@
      * 添加用户
      */
     function addUser(){
-        var url = _root + "/system/user/add?department="+1;
-        openForm(url,"用户添加");
+        //获取当前选中节点
+        var treeObj = $.fn.zTree.getZTreeObj(_treeId);
+        var nodes = treeObj.getSelectedNodes();
+        if(nodes.length > 0){
+            var url = _root + "/system/user/add?department="+nodes[0].id +"&departmentName=" + nodes[0].name;
+            openForm(url,"用户添加");
+        }else{
+            layer.msg("请先选择部门！");
+        }
     }
 
     /**
@@ -360,7 +374,7 @@
         //弹出一个页面层
         layer.openIframe({
             title: title,
-            area : ['800px' , '500px'],
+            area : ['800px' , '450px'],
             content: url ,
             btn: ['保存', '取消'],
             yes: function(index, layero){
@@ -423,13 +437,39 @@
                     success : function(result){
                         if(result.status){
                             layer.close(index);         //关闭页面
-                            layer.success(result.message);
+                            layer.ok(result.message);
                         }else{
                             layer.fail(result.message);
                         }
                     }
                 });
             }
+        });
+    }
+
+    /**
+     * 删除用户
+     * @param e
+     */
+    function deleteUser(e){
+        var info = "是否删除用户【"+$(e).data('username')+"】？";
+        var id = $(e).data("id");
+        layer.confirm(info,function (index) {
+            $.ajax({
+               url : _root + "/system/user/delete",
+               data : {
+                   id : id
+               },
+               success : function(result){
+                    if(result.status){
+                        dataTableReload(_defaultSelectTreeNodeId)
+                        layer.ok(result.message)
+                    }else{
+                        layer.fail(result.message);
+                    }
+               }
+            });
+            layer.close(index);
         });
     }
 </script>

@@ -1,13 +1,11 @@
 package com.awesome.web.domain.common.datatable;
 
 
-import org.springframework.web.bind.annotation.RequestParam;
-
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Map;
 import java.util.List;
+import java.util.Map;
 
 /**
  * @author adam
@@ -22,6 +20,8 @@ public class DataTableSearch implements Serializable {
     private Integer length = 10;    //长度
     private List<Map<Column, String>> columns = new ArrayList<>();
     private Map<Search, String> search = new HashMap<>();
+    private String searchValue;     //默认搜索框值
+    private String searchRegex;     //是否使用正则表达式
 
     public Integer getDraw() {
         return draw;
@@ -61,8 +61,25 @@ public class DataTableSearch implements Serializable {
 
     public void setSearch(Map<Search, String> search) {
         this.search = search;
+        this.searchValue = search.get(Search.value);
+        this.searchRegex = search.get(Search.regex);
     }
 
+    public String getSearchValue() {
+        return searchValue;
+    }
+
+    public void setSearchValue(String searchValue) {
+        this.searchValue = searchValue;
+    }
+
+    public String getSearchRegex() {
+        return searchRegex;
+    }
+
+    public void setSearchRegex(String searchRegex) {
+        this.searchRegex = searchRegex;
+    }
 
     /**
      * Search 枚举
