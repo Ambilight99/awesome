@@ -27,13 +27,13 @@
                 <table id="role-table" class="display" cellspacing="0" width="100%">
                     <thead>
                     <tr>
-                        <th>
-                            <input type="checkbox" class="checkall" />
-                        </th>
+                        <#--<th>-->
+                            <#--<input type="checkbox" class="checkall" />-->
+                        <#--</th>-->
                         <th>编号</th>
                         <th>角色名称</th>
                         <th>角色描述</th>
-                        <th>角色状态</th>
+                        <#--<th>角色状态</th>-->
                         <th>操作</th>
                     </tr>
                     </thead>
@@ -65,8 +65,7 @@
     var _setting = {
         async: {
             enable: true,
-            url: _root + "/system/model/resource/treeData",
-            type:"get"
+            url: _root + "/system/model/resource/treeData"
         }
     };
     $(document).ready(function(){
@@ -95,8 +94,6 @@
         }
 
         layer.confirm('已选资源【<span style="color:#3280fc" >' + resourceIds.length + '</span>】个,是否保存？', function(index){
-            console.log(resourceIds);
-
             $.ajax({
                 url: _root + "/system/role/resource/save",
                 data:{
@@ -106,9 +103,9 @@
                 type:"post",
                 success:function(result){
                     if(result.status){
-                        layer.msg("操作成功！")
+                        layer.ok(result.message)
                     }else{
-                        layer.msg("操作失败！")
+                        layer.fail(result.message)
                     }
                 }
             });
@@ -118,24 +115,26 @@
 
 
     /*---------------------------------------dataTable -----------------------------------*/
+    var _table_id = "#role-table";
     var _table_url = _root + "/system/role/loadData";
-    var _table = $('#role-table').DataTable( {
+    var _table = $(_table_id).DataTable( {
         "ajax": {
             "url": _table_url
         },
         columns: [
+//            {
+//                "sClass": "text-center",
+//                "data": "id",
+//                "render": function (data, type, full, meta) {
+//                    return '<input type="checkbox"  class="checkchild"  value="' + data + '" />';
+//                },
+//                "bSortable": false
+//            },
             {
-                "sClass": "text-center",
-                "data": "id",
-                "render": function (data, type, full, meta) {
-                    return '<input type="checkbox"  class="checkchild"  value="' + data + '" />';
-                },
-                "bSortable": false
-            },
-            {
-                "data": null ,
+                "data": "id" ,
                 "render" : function(data, type, full, meta){
-                    return meta.row + 1 + meta.settings._iDisplayStart;
+                    var no = meta.row + 1 + meta.settings._iDisplayStart;
+                    return '<span>'+no+'</span>' ;
                 }
             },
             {
@@ -145,12 +144,17 @@
                 }
             },
             {"data": "description"},
-            {"data": "status"},
+//            {"data": "status"},
             {
                 "sClass": "text-center",
                 "data": "id",
                 "render": function (data, type, full, meta) {
-                    return '<a class="a-button datatable-a-edit" onclick="editRole(this)"  data-id="' + data + ' ">【编辑】<a />';
+                    var html = '<a class="a-button datatable-a-edit" onclick="editRole(this)"  data-id="' + data + ' ">【编辑】<a />';
+                    if(full.type!="system"){
+                        html +=   '&nbsp;&nbsp;&nbsp;'
+                                + '<a class="a-button-del" onclick="isDeleteRole(this)"  data-id="' + data + '" data-name="' + full.name + '"  >【删除】<a />';
+                    }
+                    return html;
                 },
                 "bSortable": false
             }
@@ -194,6 +198,7 @@
     function editRole(e){
         var roleId = $(e).data("id");
         openForm( _root + "/system/role/edit?id="+ roleId ,'角色编辑')
+        event.stopPropagation();
     }
 
     /**
@@ -201,11 +206,8 @@
      */
     function openForm(url,title){
         //弹出一个页面层
-        layer.open({
-            type: 2,
+        layer.openIframe({
             title: title,
-            maxmin: true,
-            shadeClose: true, //点击遮罩关闭层
             area : ['800px' , '220px'],
             content: url,
             btn: ['保存', '取消'],
@@ -222,14 +224,14 @@
 
     /**
      * dataTable 行点击时执行
+     *
      */
-    $('#role-table').on("click","tr[role]",function(){
-        var name = $(this).find("span.name").html() ; //角色名称
-        if(name){
-            $("#roleName").html(name);
+    $(_table_id).on( 'click', 'tr', function () {
+        var data = _table.row( this ).data();
+        _roleId =  data.id;
+        if(data.name){
+            $("#roleName").html(data.name);
         }
-
-        _roleId= $(this).find("input.checkchild").val();    //角色id
         var setting = {
             async: {
                 otherParam:{
@@ -241,10 +243,60 @@
             }
         };
         setting = $.extend(true,_setting,setting);
-        console.log(setting)
         $.fn.zTree.init( _tree , setting);
 
         $(".tree-save").show();     //显示保存按钮
-    })
+    } );
+
+    /**
+     *  是否删除角色
+     * @param e
+     */
+    function isDeleteRole(e){
+        var roleId = $(e).data("id");
+        var roleName = $(e).data("name");
+        $.ajax({
+            url :_root + "/system/role/user/count",
+            data:{
+                id : roleId
+            },
+            success : function(result){
+                if(result.status){
+                    var info = "删除角色【"+roleName+"】，继续？";
+                    if(result.data > 0){
+                        info = "角色【"+roleName+"】关联【 "+result.data+" 】个用户，是否继续删除？";
+                    }
+                    layer.confirm(info,function(index){
+                        deleteRole(roleId);//删除角色 ，以及角色关联的资源和用户
+                        layer.close(index);
+                    });
+                }else{
+                    layer.fail(result.message);
+                }
+            }
+        });
+        event.stopPropagation();
+    }
+
+    /**
+     * 删除角色
+     * @param id
+     */
+    function deleteRole(id){
+        $.ajax({
+            url : _root + "/system/role/delete",
+            data:{
+                id : id
+            },
+            success : function(result){
+                if(result.status){
+                    layer.ok(result.message);
+                    _table.ajax.reload();
+                }else{
+                    layer.fail(result.message);
+                }
+            }
+        });
+    }
 </script>
 </html>

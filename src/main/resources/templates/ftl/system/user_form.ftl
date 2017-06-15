@@ -94,7 +94,7 @@
         $('#form').validationEngine({
             promptPosition: 'centerRight: -300, 0'
         });
-    })
+    });
 
 
     /**
@@ -123,7 +123,7 @@
                 if(result.status){
                     retrunStatus = result.status;
                 }else{
-                    layer.msg(result.message);
+                    layer.fail(result.message);
                 }
 
             }

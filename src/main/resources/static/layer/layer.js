@@ -9,10 +9,10 @@ var layer = $.extend({},window.layer,{
         layer.msg(message,{icon:0,time:2000});
     },
     ok:function(message){
-        layer.msg(message,{icon:1,time:2000});
+        layer.msg(message,{icon:6,time:2000});
     },
     fail : function(message){
-        layer.msg(message,{icon:2,time:2000});
+        layer.msg(message,{icon:5,time:2000});
     },
     doubt : function(message){
         layer.msg(message,{icon:3,time:2000});

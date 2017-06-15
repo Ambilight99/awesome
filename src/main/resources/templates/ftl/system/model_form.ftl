@@ -66,7 +66,7 @@
                 if(result.status){
                     retrunData = result.data;
                 }else{
-                    layer.msg(result.message);
+                    layer.fail(result.message);
                 }
 
             }

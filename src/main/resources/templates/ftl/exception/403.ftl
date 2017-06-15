@@ -3,6 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <title>403</title>
+    <link rel="shortcut icon" type="image/ico" href="${root}/static/custome/images/favicon.ico">
 </head>
 <style>
     .image{

@@ -15,7 +15,7 @@
     </resultMap>
 
     <!-- 查询所有的资源 -->
-    <select id="list" parameterType="com.awesome.web.mapper.system.SysResourceMapper" resultMap="BaseResultMap" >
+    <select id="list" parameterType="com.awesome.web.domain.system.SysResource" resultMap="BaseResultMap" >
        select r.*,m.name model_name from sys_resource r LEFT JOIN sys_model m ON  r.model = m.id
        <where>
            <if test="model != null">

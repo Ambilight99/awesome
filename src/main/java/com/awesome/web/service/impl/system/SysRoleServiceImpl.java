@@ -1,5 +1,6 @@
 package com.awesome.web.service.impl.system;
 
+import com.awesome.web.domain.common.datatable.DataTableSearch;
 import com.awesome.web.domain.system.SysRole;
 import com.awesome.web.domain.system.SysRoleResource;
 import com.awesome.web.mapper.system.SysRoleMapper;
@@ -37,6 +38,17 @@ public class SysRoleServiceImpl implements SysRoleService {
     }
 
     /**
+     * 根据搜索条件，查询所有相关信息
+     *
+     * @param search dataTable搜索条件
+     * @return
+     */
+    @Override
+    public List<SysRole> list(DataTableSearch search) {
+        return sysRoleMapper.listBySearch(search);
+    }
+
+    /**
      * 根据id查询角色
      *
      * @param id
@@ -56,6 +68,7 @@ public class SysRoleServiceImpl implements SysRoleService {
     @Override
     public int saveOrUpdate(SysRole role) {
         if(role.getId()==null){
+            role.setType(SysRole.CUSTOM);
             return sysRoleMapper.insert(role);
         }else{
             return  sysRoleMapper.update(role);
@@ -95,5 +108,29 @@ public class SysRoleServiceImpl implements SysRoleService {
     @Override
     public List<SysRole> authorizationByUserId(Long userId) {
         return sysRoleMapper.authorizationByUserId(userId);
+    }
+
+    /**
+     * 获取关联用户数量
+     *
+     * @param id
+     * @return
+     */
+    @Override
+    public int userCount(Long id) {
+        return sysRoleMapper.userCount(id);
+    }
+
+    /**
+     * 删除角色（以及删除角色-资源，角色-用户的关联关系）
+     *
+     * @param id
+     * @return
+     */
+    @Override
+    public int delete(Long id) {
+        sysRoleMapper.deleteRoleResourceById(id);
+        sysRoleMapper.deleteUserRoleById(id);
+        return sysRoleMapper.deleteById(id);
     }
 }

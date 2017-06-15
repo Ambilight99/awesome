@@ -4206,7 +4206,7 @@
 			/* Update all other filter input elements for the new display */
 			var n = features.f;
 			var val = !this.value ? "" : this.value; // mental IE8 fix :-(
-	
+
 			/* Now do the filter */
 			if ( val != previousSearch.sSearch && e.keyCode == 13 ) {	//by adam 修改搜索按钮的触发事件 按下enter后触发
 				_fnFilterComplete( settings, {

@@ -78,7 +78,7 @@
                 if(result.status){
                     retrunStatus = result.status;
                 }else{
-                    layer.msg(result.message);
+                    layer.fail(result.message);
                 }
 
             }

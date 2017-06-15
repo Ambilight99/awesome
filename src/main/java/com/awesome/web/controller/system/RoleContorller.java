@@ -10,7 +10,6 @@ import com.github.pagehelper.PageHelper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.web.access.intercept.FilterInvocationSecurityMetadataSource;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -18,6 +17,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 /**
  * @author adam
@@ -81,7 +81,7 @@ public class RoleContorller {
     @ResponseBody
     public DataTablePage loadData(SysRole role , DataTableSearch search){
         PageHelper.offsetPage(search.getStart(),search.getLength());
-        List<SysRole> roleList = sysRoleService.list(role);
+        List<SysRole> roleList = sysRoleService.list(search);
         return new DataTablePage(roleList);
     }
 
@@ -115,6 +115,47 @@ public class RoleContorller {
         }catch (Exception e){
             e.printStackTrace();
             return ResultMessage.fail("操作失败！");
+        }
+    }
+
+    /**
+     * 获取关联用户数量
+     * @param id
+     * @return
+     */
+    @RequestMapping("user/count")
+    @ResponseBody
+    public ResultMessage userCount(Long id){
+        try {
+            int count = sysRoleService.userCount(id);
+            return ResultMessage.success("获取关联用户数量成功！",count);
+        }catch (Exception e){
+            logger.error("【角色】获取关联用户数量错误！",e);
+            return ResultMessage.fail("获取关联用户数量失败！");
+        }
+    }
+
+    /**
+     * 角色删除
+     * @param id
+     * @return
+     */
+    @RequestMapping("delete")
+    @ResponseBody
+    public ResultMessage delete(Long id){
+        try {
+            SysRole role = sysRoleService.findById(id);
+            if(role == null){
+                return ResultMessage.fail("角色已被删除，请勿重复操作！");
+            }
+            if(Objects.equals(SysRole.SYSTEM, role.getType())){
+                return ResultMessage.fail("系统角色，不能被删除！");
+            }
+            sysRoleService.delete(id);
+            return ResultMessage.success("删除成功！");
+        }catch (Exception e){
+            logger.error("【角色】删除错误！",e);
+            return ResultMessage.fail("删除失败！");
         }
     }
 

@@ -18,13 +18,27 @@
     </resultMap>
 
     <!-- 根据角色信息查询所有的资源 -->
-    <select id="listByRole" parameterType="com.awesome.web.mapper.system.SysRoleMapper" resultMap="BaseResultMap" >
+    <select id="listByRole" parameterType="com.awesome.web.domain.system.SysRole" resultMap="BaseResultMap" >
        select * from sys_role
        <where>
            <if test="name != null">
                name = #{name}
            </if>
        </where>
+    </select>
+
+    <!-- 根据搜索条件，查询所有相关信息 -->
+    <select id="listBySearch"  parameterType="com.awesome.web.domain.common.datatable.DataTableSearch" resultMap="BaseResultMap" >
+        <if test="search.searchValue!=null">
+            <bind name="searchValue" value="'%'+search.searchValue+'%'"/>
+        </if>
+        select * from sys_role
+        <where>
+            <if test="search.searchValue!=null">
+                AND ( `name` like #{searchValue}  OR `description` like #{searchValue} )
+
+            </if>
+        </where>
     </select>
 
     <!-- 查询所有的角色，并关联用户 -->
@@ -37,13 +51,13 @@
 
 
     <!-- 更新模块信息 -->
-    <insert id="insert" parameterType="com.awesome.web.mapper.system.SysRoleMapper" >
+    <insert id="insert" parameterType="com.awesome.web.domain.system.SysRole" >
        INSERT INTO sys_role (`name`, `description`, `type`, `status`)
           VALUES (#{name}, #{description}, #{type}, 1);
     </insert>
 
     <!-- 更新角色信息 -->
-    <update id="update" parameterType="com.awesome.web.mapper.system.SysRoleMapper" >
+    <update id="update" parameterType="com.awesome.web.domain.system.SysRole" >
         UPDATE sys_role
         <set>
             <if test="name != null">

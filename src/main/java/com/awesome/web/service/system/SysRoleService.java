@@ -1,5 +1,6 @@
 package com.awesome.web.service.system;
 
+import com.awesome.web.domain.common.datatable.DataTableSearch;
 import com.awesome.web.domain.system.SysRole;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -20,6 +21,13 @@ public interface SysRoleService {
      * @return
      */
     List<SysRole> list(SysRole role);
+
+    /**
+     * 根据搜索条件，查询所有相关信息
+     * @param search dataTable搜索条件
+     * @return
+     */
+    List<SysRole> list(DataTableSearch search);
 
     /**
      * 根据id查询角色
@@ -49,4 +57,18 @@ public interface SysRoleService {
      * @return
      */
     List<SysRole> authorizationByUserId(Long userId);
+
+    /**
+     * 获取关联用户数量
+     * @param id
+     * @return
+     */
+    int userCount(Long id);
+
+    /**
+     * 删除角色（以及删除角色-资源，角色-用户的关联关系）
+     * @param id
+     * @return
+     */
+    int delete(Long id);
 }

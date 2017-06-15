@@ -1,7 +1,9 @@
 package com.awesome.web.mapper.system;
 
+import com.awesome.web.domain.common.datatable.DataTableSearch;
 import com.awesome.web.domain.system.SysRole;
 import com.awesome.web.domain.system.SysRoleResource;
+import org.apache.ibatis.annotations.Delete;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
@@ -28,6 +30,13 @@ public interface SysRoleMapper {
      * @return
      */
     List<SysRole> listByRole(SysRole role);
+
+    /**
+     * 根据搜索条件，查询所有相关信息
+     * @param search
+     * @return
+     */
+    List<SysRole> listBySearch(@Param("search") DataTableSearch search);
 
     /**
      * 根据id查询角色
@@ -71,4 +80,29 @@ public interface SysRoleMapper {
      * @return
      */
     List<SysRole> authorizationByUserId(@Param(value="userId") Long userId);
+
+    /**
+     * 获取关联用户数量
+     * @param id
+     * @return
+     */
+    @Select( " select count(*) from sys_user_role where role_id =#{id} " )
+    int userCount(Long id);
+
+
+    /**
+     * 根据角色id，删除角色和用户关系
+     * @param id
+     * @return
+     */
+    @Delete( " delete from sys_user_role where role_id =#{id} " )
+    int deleteUserRoleById(Long id);
+
+    /**
+     * 根据id删除角色
+     * @param id
+     * @return
+     */
+    @Delete( " delete from sys_role where id = #{id} " )
+    int deleteById(Long id);
 }

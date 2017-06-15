@@ -4,13 +4,13 @@
     <!--<cache />   采用ehcache 进行缓存-->
 
     <!-- 插入部门信息 -->
-    <insert id="insert" parameterType="com.awesome.web.mapper.system.SysDepartmentMapper" >
+    <insert id="insert" parameterType="com.awesome.web.domain.system.SysDepartment" >
         INSERT INTO sys_department (`name`, `parent`, `description`, `level`, `order`, `status`)
             VALUES ( #{name}, #{parent}, #{description}, (SELECT level+1 FROM `sys_department` s where s.id =  #{parent} ), 1 , 1);
     </insert>
 
     <!-- 更新部门信息 -->
-    <update id="update" parameterType="com.awesome.web.mapper.system.SysDepartmentMapper" >
+    <update id="update" parameterType="com.awesome.web.domain.system.SysDepartment" >
         UPDATE sys_department
         <set>
             <if test="name != null">
