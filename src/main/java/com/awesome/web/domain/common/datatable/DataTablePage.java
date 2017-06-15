@@ -1,8 +1,9 @@
 package com.awesome.web.domain.common.datatable;
 
-import com.github.pagehelper.Page;
+import com.github.pagehelper.PageInfo;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -18,17 +19,15 @@ public class DataTablePage<T> implements Serializable{
     private List<T> data;              //结果集
 
     /**
-     * 包装Page对象，因为直接返回Page对象，在JSON处理以及其他情况下会被当成List来处理，
+     * 包装list对象，因为直接返回list对象，在JSON处理以及其他情况下会被当成List来处理，
      * 而出现一些问题。
      * @param list          page结果
      */
     public DataTablePage(List<T> list) {
-        if (list instanceof Page) {
-            Page<T> page = (Page<T>) list;
-            this.recordsTotal = page.getTotal();
-            this.recordsFiltered = page.getTotal();;
-            this.data = page;
-        }
+        PageInfo<T> pageInfo = new PageInfo<T>(list);
+        this.recordsTotal = pageInfo.getTotal();
+        this.recordsFiltered = pageInfo.getTotal();
+        this.data = ( pageInfo.getList() == null ? new ArrayList<>() : pageInfo.getList());
     }
 
     public int getDraw() {
