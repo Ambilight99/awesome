@@ -49,7 +49,7 @@ $.fn.extend({
        var $icon =$("<i></i>");  //生成i标签
        $icon.addClass(option.icon).attr("style",option.iconStyle);
 
-       var treeId = "select_tree_" + ( $(this).attr("id") || $(this).arrt("name") || "default" );
+       var treeId = "select_tree_" + ( $(this).attr("id") || $(this).arr("name") || "default" );
        var $ztreeDiv = $('<div><ul class="ztree"></ul></div>');
        $ztreeDiv.find("ul").attr("id",treeId);
 
@@ -106,5 +106,7 @@ $.fn.extend({
 //初始化
 $(function(){
    //生成一个树下拉框
-    $(".select_tree").selectTree();
+    if($(".select_tree").length > 0){
+        $(".select_tree").selectTree();
+    }
 });

@@ -30,9 +30,10 @@ public interface SysUserMapper {
     /**
      * 根据用户条件进行搜索
      * @param user
+     * @param search
      * @return
      */
-    List<SysUser> listByUser(SysUser user);
+    List<SysUser> listByUser( @Param("user") SysUser user, @Param("search") DataTableSearch search);
 
     /**
      * 根据id查询用户信息

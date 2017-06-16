@@ -58,4 +58,12 @@ public interface SysResourceService {
      * @return
      */
     int deleteById(Long id);
+
+    /**
+     * 将资源移动到模块
+     * @param ids
+     * @param model
+     * @return
+     */
+    int move(Long[] ids, Long model);
 }

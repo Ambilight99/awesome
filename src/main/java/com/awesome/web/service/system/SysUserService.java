@@ -21,12 +21,6 @@ public interface SysUserService {
      * 列出所有用户信息
      * @return
      */
-    List<SysUser> list(SysUser user);
-
-    /**
-     * 列出所有用户信息
-     * @return
-     */
     List<SysUser> list(SysUser user,DataTableSearch search);
 
     /**

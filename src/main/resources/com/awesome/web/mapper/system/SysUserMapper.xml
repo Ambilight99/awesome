@@ -50,31 +50,37 @@
     </select>
 
     <!-- 根据用户条件进行搜索 -->
-    <select id="listByUser" parameterType="com.awesome.web.domain.system.SysUser" resultMap="BaseResultMap">
+    <select id="listByUser"  resultMap="BaseResultMap">
+        <if test="search.searchValue!=null">
+            <bind name="searchValue" value="'%'+search.searchValue+'%'" />
+        </if>
         select
             u.* , d.name department_name
         from sys_user u left join sys_department d on u.department= d.id
         <where>
-            <if test="name!=null">
-                u.`name` = #{name}
+            <if test="user.name!=null">
+                u.`name` = #{user.name}
             </if>
-            <if test="username!=null">
-               AND  u.`username` = #{username}
+            <if test="user.username!=null">
+               AND  u.`username` = #{user.username}
             </if>
-            <if test="sex!=null">
-               AND u.`sex` = #{sex}
+            <if test="user.sex!=null">
+               AND u.`sex` = #{user.sex}
             </if>
-            <if test="email!=null">
-               AND u.`email` = #{email}
+            <if test="user.email!=null">
+               AND u.`email` = #{user.email}
             </if>
-            <if test="phone!=null">
-               AND u.`phone` = #{phone}
+            <if test="user.phone!=null">
+               AND u.`phone` = #{user.phone}
             </if>
-            <if test="department!=null">
-               AND u.`department` = #{department}
+            <if test="user.department!=null">
+               AND u.`department` = #{user.department}
             </if>
-            <if test="status!=null">
-               AND u.`status` = #{status}
+            <if test="user.status!=null">
+               AND u.`status` = #{user.status}
+            </if>
+            <if test="search.searchValue!=null">
+                AND ( u.name like #{searchValue} OR  u.username like  #{searchValue} OR  u.phone like  #{searchValue} )
             </if>
         </where>
     </select>

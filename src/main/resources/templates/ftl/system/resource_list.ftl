@@ -202,7 +202,7 @@
         }
         //判断模块是否存在资源。
         $.ajax({
-            url : _table_url ,
+            url : _tableUrl ,
             data : {
                 model:treeNode.id
             },
@@ -295,14 +295,16 @@
      */
     function onClick(event, treeId, treeNode, clickFlag){
         _defaultSelectTreeNodeId = treeNode.id;
+        clearDataTableSearch();
         dataTableReload(_defaultSelectTreeNodeId)
     }
 
     /*---------------------------------------dataTable -----------------------------------*/
-    var _table_url = _root + "/system/resource/loadData";
-    var _table = $('#source-table').DataTable( {
+    var _tableUrl = _root + "/system/resource/loadData";
+    var _tableId = "#source-table";
+    var _table = $(_tableId).DataTable( {
         "ajax": {
-            "url": _table_url
+            "url": _tableUrl
         },
         columns: [
             {
@@ -332,8 +334,8 @@
                 "data": "id",
                 "render": function (data, type, full, meta) {
                     var model = full.model;
-                    return '<a class="a-button" onclick="editResource(this)"  data-id="' + data + ' ">【编辑】<a />'
-                         + '<a class="a-button" onclick="moveResource('+ model +')" >【移动】<a />'
+                    return '<a class="a-button" onclick="editResource(this)" data-id="' + data + '">【编辑】<a />'
+                         + '<a class="a-button" onclick="moveResource(this)" data-id="' + data + '" data-model="'+full.model+'"  >【移动】<a />'
                          + '&nbsp;&nbsp;&nbsp;'
                          + '<a class="a-button-del" onclick="deleteResource(this)"  data-id="' + data + '" data-name="'+full.name+'"  >【删除】<a />';
                 },
@@ -356,7 +358,7 @@
         var param = {
             model : modelId
         };
-        _table.ajax.url( _table_url + "?"+ $.param(param) ).load();
+        _table.ajax.url( _tableUrl + "?"+ $.param(param) ).load();
     }
 
     /**
@@ -380,11 +382,8 @@
      */
     function openForm(url,title){
         //弹出一个页面层
-        layer.open({
-            type: 2,
+        layer.openIframe({
             title: title,
-            maxmin: true,
-            shadeClose: true, //点击遮罩关闭层
             area : ['800px' , '280px'],
             content: url ,
             btn: ['保存', '取消'],
@@ -401,12 +400,66 @@
     }
 
     /**
-     *
+     * 移动单个资源
      * @param e
      */
-    function moveResource(model){
-        console.log(model);
+    function moveResource(e){
+        var data = {
+            id :  $(e).data("model")
+        };
+        var url = _root + "/system/model/tree?" + $.param(data);
+        var ids = [];
+        ids.push( $(e).data("id"));
+        openModelTree(url,ids);
     }
+    /**
+     * 移动多个个资源
+     * @param e
+     */
+    function moveResources(){
+//        var data = {
+//            id :  $(e).data("model")
+//        };
+//        var ids = [];
+        openModelTree(url,ids);
+    }
+    /**
+     * 打开模块树
+     */
+    function openModelTree(url ,ids){
+        //弹出一个页面层
+        layer.openIframe({
+            title: "模块树",
+            area : ['300px' , '400px'],
+            content: url ,
+            btn: ['保存', '取消'],
+            yes: function(index, layero){
+                var iframeWin = window[layero.find('iframe')[0]['name']];
+                var modelId = iframeWin.save();       //从子iframe页面中获取返回值
+                if(modelId){
+                    $.ajax({
+                        url : _root + "/system/resource/move",
+                        data : {
+                            model : modelId,
+                            ids : ids
+                        },
+                        success : function(result){
+                            if(result.status){
+                                layer.ok(result.message);
+                                _table.ajax.reload();
+                                layer.close(index);         //关闭页面
+                            }else{
+                                layer.fail(result.message);
+                            }
+                        }
+                    });
+                }else{
+                    layer.fail("操作失败！");
+                }
+            }
+        });
+    }
+
 
 
     /**
@@ -433,6 +486,17 @@
             });
             layer.close(index);
         });
+    }
+
+    /**
+     * 清空dataTable的搜索框
+     */
+    function clearDataTableSearch(){
+//        var inputs =$(_tableId+"_filter").find("input[type='search']");
+//        if(inputs.length > 0){
+//            $(inputs[0]).val('');
+//        }
+        //待处理
     }
 </script>
 </html>

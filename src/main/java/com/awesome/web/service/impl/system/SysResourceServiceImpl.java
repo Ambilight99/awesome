@@ -50,7 +50,7 @@ public class SysResourceServiceImpl implements SysResourceService {
     @Override
     public List<SysResource> list(SysResource resource,DataTableSearch search) {
         PageHelper.offsetPage(search.getStart(),search.getLength());
-        return sysResourceMapper.list(resource);
+        return sysResourceMapper.listBySearch(resource,search,null);
     }
 
     /**
@@ -109,6 +109,17 @@ public class SysResourceServiceImpl implements SysResourceService {
     public int deleteById(Long id) {
         sysResourceMapper.deleteRoleResourceById(id);
         return sysResourceMapper.deleteById(id);
+    }
+
+    /**
+     * 将资源移动到模块
+     * @param ids
+     * @param model
+     * @return
+     */
+    @Override
+    public int move(Long[] ids, Long model) {
+        return  sysResourceMapper.move(ids, model);
     }
 
 

@@ -16,7 +16,6 @@
     <script type="text/javascript" src="${root}/static/zui/dist/js/zui.min.js"></script>                <!-- ZUI 标准版压缩后的 JavaScript 文件 -->
     <script type="text/javascript" src="${root}/static/ztree/js/jquery.ztree.core.js"></script>         <!--ztree 核心  -->
     <script type="text/javascript" src="${root}/static/ztree/js/jquery.ztree.excheck.js"></script>      <!--ztree 选择  -->
-    <script type="text/javascript" src="${root}/static/ztree/js/jquery.ztree.exedit.js"></script>       <!--ztree 编辑  -->
     <script type="text/javascript" src="${root}/static/jquery/jquery.form-3.51.0.js"></script>          <!-- jquery表单提交插件 -->
     <script type="text/javascript" src="${root}/static/custome/js/custome.from.plugin.js"></script>     <!-- 自定义的表单控件插件 -->
     <script type="text/javascript" src="${root}/static/jquery-validation-engine/js/jquery.validationEngine.js"></script>   <!-- jquery表单验证插件   -->
@@ -70,7 +69,7 @@
         <label for="department" class="col-sm-2">所属部门</label>
         <div class="col-md-6 col-sm-9">
             <span class="form-control select_tree" id="departmentName" data-ztree-url="${root}/system/department/treeData">
-                ${user.departmentName?default('111')}
+                ${user.departmentName?default('')}
             </span>
             <input type="hidden" class="validate[required]" name="department" value="${user.department?default('')}" />
         </div>

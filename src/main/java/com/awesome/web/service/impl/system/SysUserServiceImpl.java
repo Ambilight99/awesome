@@ -37,16 +37,6 @@ public class SysUserServiceImpl implements SysUserService {
     /**
      * 列出所有用户信息
      *
-     * @return
-     */
-    @Override
-    public List<SysUser> list(SysUser user) {
-        return sysUserMapper.listByUser(user);
-    }
-
-    /**
-     * 列出所有用户信息
-     *
      * @param user
      * @param search
      * @return
@@ -54,7 +44,7 @@ public class SysUserServiceImpl implements SysUserService {
     @Override
     public List<SysUser> list(SysUser user, DataTableSearch search) {
         PageHelper.offsetPage(search.getStart(),search.getLength());
-        return sysUserMapper.listByUser(user);
+        return sysUserMapper.listByUser(user,search);
     }
 
     /**

@@ -109,10 +109,10 @@ public class RoleContorller {
         try {
             sysRoleService.resourceSave(roleId,resourceIds);
             myInvocationSecurityMetadataSourceService.reloadResourceDefine(); //更新角色资源关系后，重新加载security元数据
-            return ResultMessage.success();
+            return ResultMessage.success("保存成功！");
         }catch (Exception e){
-            e.printStackTrace();
-            return ResultMessage.fail("操作失败！");
+            logger.error("【角色-资源关系】保存错误！",e);
+            return ResultMessage.fail("保存失败！");
         }
     }
 

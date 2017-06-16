@@ -84,4 +84,14 @@
         </set>
         WHERE  id = #{id}
     </update>
+
+    <!--修改资源所属模块-->
+    <update id="move" >
+        UPDATE sys_resource SET `model` = #{model}
+          WHERE id IN (
+              <foreach collection="ids" item="id" separator=",">
+                  #{id}
+              </foreach>
+          )
+    </update>
 </mapper>

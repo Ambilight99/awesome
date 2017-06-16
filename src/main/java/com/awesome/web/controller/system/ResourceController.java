@@ -118,4 +118,16 @@ public class ResourceController {
             return ResultMessage.fail("删除失败！");
         }
     }
+
+    @RequestMapping("move")
+    @ResponseBody
+    public ResultMessage move(@RequestParam("ids[]") Long[] ids, Long model) {
+        try {
+            sysResourceService.move(ids,model);
+            return ResultMessage.success("移动成功！");
+        }catch (Exception e){
+            logger.error("【资源】移动错误！",e);
+            return ResultMessage.fail("移动失败！");
+        }
+    }
 }

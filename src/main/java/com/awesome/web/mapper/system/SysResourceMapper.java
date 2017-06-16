@@ -30,6 +30,13 @@ public interface SysResourceMapper {
     List<SysResource> listByRoleName(@Param("roleName") String roleName);
 
     /**
+     * 查询所有的资源
+     * @param resource
+     * @return
+     */
+    List<SysResource> list(SysResource resource);
+
+    /**
      * 根据条件列出所有资源信息
      * @param resource
      * @param search
@@ -38,12 +45,6 @@ public interface SysResourceMapper {
      */
     List<SysResource> listBySearch(@Param("resource") SysResource resource, @Param("search") DataTableSearch search,  @Param("models") List<Long> models);
 
-    /**
-     * 查询所有的资源
-     * @param resource
-     * @return
-     */
-    List<SysResource> list(SysResource resource);
 
     /**
      * 根据角色id查询所有的资源
@@ -96,4 +97,11 @@ public interface SysResourceMapper {
     @Delete(" delete from sys_resource where id = #{id} ")
     int deleteById(Long id);
 
+    /**
+     * 修改资源所属模块
+     * @param ids
+     * @param model
+     * @return
+     */
+    int move(@Param("ids") Long[] ids, @Param("model") Long model);
 }

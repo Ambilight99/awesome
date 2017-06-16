@@ -58,6 +58,18 @@ public class ModelController {
     }
 
     /**
+     * 打开模块树页面
+     * @return
+     */
+    @RequestMapping("tree")
+    public String modelTree(Map map, Long id, String name){
+        map.put("id", id);
+        map.put("name", name);
+        return "/system/model_tree";
+    }
+
+
+    /**
      * 获取模型的树形结构
      * @return
      */
