@@ -213,8 +213,9 @@
             btn: ['保存', '取消'],
             yes: function(index, layero){
                 var iframeWin = window[layero.find('iframe')[0]['name']];
-                var retrunStatus = iframeWin.save();       //从子iframe页面中获取返回值
-                if(retrunStatus){
+                var retrunResult = iframeWin.save();       //从子iframe页面中获取返回值
+                if(retrunResult){
+                    layer.ok(retrunResult.message);
                     _table.ajax.reload();
                     layer.close(index);         //关闭页面
                 }
@@ -264,7 +265,7 @@
                 if(result.status){
                     var info = "删除角色【"+roleName+"】，继续？";
                     if(result.data > 0){
-                        info = "角色【"+roleName+"】关联【 "+result.data+" 】个用户，是否继续删除？";
+                        info = "角色【"+roleName+"】关联 "+result.data+" 个用户，是否继续删除？";
                     }
                     layer.confirm(info,function(index){
                         deleteRole(roleId);//删除角色 ，以及角色关联的资源和用户

@@ -7,8 +7,6 @@ import com.awesome.web.domain.system.SysRole;
 import com.awesome.web.domain.system.SysUser;
 import com.awesome.web.service.system.SysRoleService;
 import com.awesome.web.service.system.SysUserService;
-import com.github.pagehelper.Page;
-import com.github.pagehelper.PageHelper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -88,11 +86,10 @@ public class UserController {
     @ResponseBody
     public DataTablePage loadData(SysUser user , DataTableSearch search ,
            @RequestParam(value = "subdivision",defaultValue = "false" ) boolean subdivision){
-        PageHelper.offsetPage(search.getStart(),search.getLength());
         user.setStatus(1); //状态为有效的用户
         List<SysUser> userList = new ArrayList<>();
         if(user.getDepartment()==null){
-            userList = sysUserService.list(user);
+            userList = sysUserService.list(user,search);
         }else{
             userList = sysUserService.list(user,search,true);
         }

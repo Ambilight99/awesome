@@ -20,6 +20,7 @@
     <script type="text/javascript" src="${root}/static/jquery/jquery.form-3.51.0.js"></script>          <!-- jquery表单提交插件 -->
     <script type="text/javascript" src="${root}/static/custome/js/custome.from.plugin.js"></script>     <!-- 自定义的表单控件插件 -->
     <script type="text/javascript" src="${root}/static/jquery-validation-engine/js/jquery.validationEngine.js"></script>   <!-- jquery表单验证插件   -->
+    <script type="text/javascript" src="${root}/static/layer/layer.js"></script>                    <!--layer弹窗   -->
 </head>
 <body style="width:98%">
 <br/>
@@ -96,7 +97,6 @@
         });
     });
 
-
     /**
      * 保存
      */
@@ -110,7 +110,7 @@
      * 表单提交  保存
      */
     function formSubmit() {
-        var retrunStatus;
+        var retrunResult=null;
         $("#form").ajaxSubmit({
             url: _root + "/system/user/save",
             type:"post",
@@ -121,14 +121,14 @@
             },
             success:function(result){
                 if(result.status){
-                    retrunStatus = result.status;
+                    retrunResult = result;
                 }else{
                     layer.fail(result.message);
                 }
 
             }
         });
-        return retrunStatus;
+        return retrunResult;
     }
 </script>
 </html>

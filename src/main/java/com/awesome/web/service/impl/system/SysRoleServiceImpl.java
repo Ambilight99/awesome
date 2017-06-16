@@ -5,6 +5,7 @@ import com.awesome.web.domain.system.SysRole;
 import com.awesome.web.domain.system.SysRoleResource;
 import com.awesome.web.mapper.system.SysRoleMapper;
 import com.awesome.web.service.system.SysRoleService;
+import com.github.pagehelper.PageHelper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -45,6 +46,7 @@ public class SysRoleServiceImpl implements SysRoleService {
      */
     @Override
     public List<SysRole> list(DataTableSearch search) {
+        PageHelper.offsetPage(search.getStart(),search.getLength());
         return sysRoleMapper.listBySearch(search);
     }
 

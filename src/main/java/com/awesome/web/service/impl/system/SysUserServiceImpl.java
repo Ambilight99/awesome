@@ -9,6 +9,7 @@ import com.awesome.web.domain.system.SysUserRole;
 import com.awesome.web.mapper.system.SysDepartmentMapper;
 import com.awesome.web.mapper.system.SysUserMapper;
 import com.awesome.web.service.system.SysUserService;
+import com.github.pagehelper.PageHelper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.stereotype.Service;
@@ -41,6 +42,39 @@ public class SysUserServiceImpl implements SysUserService {
     @Override
     public List<SysUser> list(SysUser user) {
         return sysUserMapper.listByUser(user);
+    }
+
+    /**
+     * 列出所有用户信息
+     *
+     * @param user
+     * @param search
+     * @return
+     */
+    @Override
+    public List<SysUser> list(SysUser user, DataTableSearch search) {
+        PageHelper.offsetPage(search.getStart(),search.getLength());
+        return sysUserMapper.listByUser(user);
+    }
+
+    /**
+     * 根据条件列出所有用户信息
+     *
+     * @param user
+     * @param search
+     * @param subdivision
+     * @return
+     */
+    @Override
+    public List<SysUser> list(SysUser user, DataTableSearch search, boolean subdivision) {
+        List<Long> departments = new ArrayList<>();
+        if(subdivision){
+            departments = this.getAllChildren(user.getDepartment(), sysDepartmentMapper.list() );
+        }else{
+            departments.add( user.getDepartment() );
+        }
+        PageHelper.offsetPage(search.getStart(),search.getLength());
+        return sysUserMapper.listBySearch(user,search,departments);
     }
 
     /**
@@ -107,25 +141,6 @@ public class SysUserServiceImpl implements SysUserService {
         user.setId(id);
         user.setStatus(0);
         return sysUserMapper.update(user);
-    }
-
-    /**
-     * 根据条件列出所有用户信息
-     *
-     * @param user
-     * @param search
-     * @param subdivision
-     * @return
-     */
-    @Override
-    public List<SysUser> list(SysUser user, DataTableSearch search, boolean subdivision) {
-        List<Long> departments = new ArrayList<>();
-        if(subdivision){
-            departments = this.getAllChildren(user.getDepartment(), sysDepartmentMapper.list() );
-        }else{
-            departments.add( user.getDepartment() );
-        }
-        return sysUserMapper.listBySearch(user,search,departments);
     }
 
     /**

@@ -100,6 +100,9 @@ public class SysModelServiceImpl implements SysModelService {
     public int saveOrUpdate(SysModel model) {
         int count;
         if( model.getId() == null ){
+            if(model.getOrder()==null){
+                model.setOrder(1);
+            }
             count = sysModelMapper.insert(model);
         }else{
             count = sysModelMapper.update(model);

@@ -24,6 +24,27 @@
        </where>
     </select>
 
+    <!-- 根据条件列出所有用户信息 -->
+    <select id="listBySearch" resultMap="BaseResultMap">
+        <if test="search.searchValue!=null">
+            <bind name="searchValue" value="'%'+search.searchValue+'%'" />
+        </if>
+        select r.*,m.name model_name
+        from sys_resource r LEFT JOIN sys_model m ON r.model = m.id
+        <where>
+            <if test="null != models and models.size > 0">
+                AND r.`model` IN (
+                <foreach collection="models" item="model" separator=",">
+                    #{model}
+                </foreach>
+                )
+            </if>
+            <if test="search.searchValue!=null">
+                AND ( r.name LIKE #{searchValue} OR r.url LIKE #{searchValue} )
+            </if>
+        </where>
+    </select>
+
     <!-- 根据roleId查询所有的资源 -->
     <select id="listByRole" parameterType="long" resultMap="BaseResultMap" >
         select * from sys_resource re, sys_role_resource rr

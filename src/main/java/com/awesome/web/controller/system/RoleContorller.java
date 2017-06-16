@@ -6,7 +6,6 @@ import com.awesome.web.domain.common.datatable.DataTablePage;
 import com.awesome.web.domain.common.datatable.DataTableSearch;
 import com.awesome.web.domain.system.SysRole;
 import com.awesome.web.service.system.SysRoleService;
-import com.github.pagehelper.PageHelper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -80,7 +79,6 @@ public class RoleContorller {
     @RequestMapping("loadData")
     @ResponseBody
     public DataTablePage loadData(SysRole role , DataTableSearch search){
-        PageHelper.offsetPage(search.getStart(),search.getLength());
         List<SysRole> roleList = sysRoleService.list(search);
         return new DataTablePage(roleList);
     }

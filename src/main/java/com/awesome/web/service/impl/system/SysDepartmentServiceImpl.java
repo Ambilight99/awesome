@@ -51,6 +51,9 @@ public class SysDepartmentServiceImpl implements SysDepartmentService {
     @Override
     public int saveOrUpdate(SysDepartment department) {
         if(department.getId()==null){
+            if(department.getOrder()==null){
+                department.setOrder(1);
+            }
             return sysDepartmentMapper.insert(department);
         }else{
             return sysDepartmentMapper.update(department);

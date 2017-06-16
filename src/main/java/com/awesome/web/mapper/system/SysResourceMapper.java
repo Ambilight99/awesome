@@ -1,6 +1,8 @@
 package com.awesome.web.mapper.system;
 
+import com.awesome.web.domain.common.datatable.DataTableSearch;
 import com.awesome.web.domain.system.SysResource;
+import org.apache.ibatis.annotations.Delete;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
@@ -26,6 +28,15 @@ public interface SysResourceMapper {
     @Select( " select * from sys_resource re , sys_role_resource rr ,sys_role ro " +
             "    WHERE  rr.resource_id=re.id and ro.id=rr.role_id AND ro.name=#{roleName} ")
     List<SysResource> listByRoleName(@Param("roleName") String roleName);
+
+    /**
+     * 根据条件列出所有资源信息
+     * @param resource
+     * @param search
+     * @param models
+     * @return
+     */
+    List<SysResource> listBySearch(@Param("resource") SysResource resource, @Param("search") DataTableSearch search,  @Param("models") List<Long> models);
 
     /**
      * 查询所有的资源
@@ -68,4 +79,21 @@ public interface SysResourceMapper {
      * @return
      */
     int update(SysResource resource);
+
+    /**
+     * 根据资源id,删除角色-资源关系
+     * @param id
+     * @return
+     */
+    @Delete(" delete from sys_role_resource where resource_id = #{id} ")
+    int deleteRoleResourceById(Long id);
+
+    /**
+     * 根据资源id 删除资源
+     * @param id
+     * @return
+     */
+    @Delete(" delete from sys_resource where id = #{id} ")
+    int deleteById(Long id);
+
 }

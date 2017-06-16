@@ -24,6 +24,12 @@ public interface SysUserService {
     List<SysUser> list(SysUser user);
 
     /**
+     * 列出所有用户信息
+     * @return
+     */
+    List<SysUser> list(SysUser user,DataTableSearch search);
+
+    /**
      * 根据id查询用户信息
      * @param id
      * @return
@@ -59,6 +65,6 @@ public interface SysUserService {
      * @param search
      * @param subdivision
      * @return
-     */
+             */
     List<SysUser> list(SysUser user, DataTableSearch search, boolean subdivision );
 }

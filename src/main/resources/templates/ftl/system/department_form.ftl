@@ -12,6 +12,7 @@
     <script type="text/javascript" src="${root}/static/zui/dist/js/zui.min.js"></script>   <!-- ZUI 标准版压缩后的 JavaScript 文件 -->
     <script type="text/javascript" src="${root}/static/jquery/jquery.form-3.51.0.js"></script>   <!-- jquery表单提交插件 -->
     <script type="text/javascript" src="${root}/static/jquery-validation-engine/js/jquery.validationEngine.js"></script>   <!-- jquery表单验证插件   -->
+    <script type="text/javascript" src="${root}/static/layer/layer.js"></script>                    <!--layer弹窗   -->
 </head>
 <body style="width:98%">
 <br/>
@@ -60,7 +61,7 @@
      * 表单提交  保存
      */
     function formSubmit() {
-        var retrunData;
+        var retrunResult=null;
         $("#form").ajaxSubmit({
             url: _root + "/system/department/save",
             type:"post",
@@ -68,14 +69,14 @@
             dataType:"json",
             success:function(result){
                 if(result.status){
-                    retrunData = result.data;
+                    retrunResult = result;
                 }else{
                     layer.fail(result.message);
                 }
 
             }
         });
-        return retrunData;
+        return retrunResult;
     }
 </script>
 </html>

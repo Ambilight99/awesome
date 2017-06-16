@@ -77,10 +77,10 @@
         },
         callback: {
             onAsyncSuccess :onAsyncSuccess,  //异步加载成功后触发
-            onClick : onClick,              //点击按钮
-            beforeRename : beforeRename ,   //编辑触发
-            beforeRemove : beforeRemove ,   //删除触发
-            onDrop : onDrop                 // 移动后回调
+            onClick : onClick,               //点击按钮
+            beforeRename : beforeRename ,    //编辑触发
+            beforeRemove : beforeRemove ,    //删除触发
+            onDrop : onDrop                  // 移动后回调
         }
     };
     $(document).ready(function(){
@@ -91,7 +91,7 @@
         var sObj = $("#" + treeNode.tId + "_span");
         if (treeNode.editNameFlag || $("#addBtn_"+treeNode.tId).length>0) return;
         var addStr = "<span class='button add' id='addBtn_" + treeNode.tId
-                + "' title='添加子模块' onfocus='this.blur();' ></span>";
+                + "' title='添加子部门' onfocus='this.blur();' ></span>";
 
         sObj.after(addStr);
 
@@ -127,8 +127,9 @@
             btn: ['保存', '取消'],
             yes: function(index, layero){
                 var iframeWin = window[layero.find('iframe')[0]['name']];
-                var model = iframeWin.save();       //从子iframe页面中获取返回值
-                if(model){
+                var retrunResult = iframeWin.save();       //从子iframe页面中获取返回值
+                if(retrunResult){
+                    layer.ok(retrunResult.message);
                     var treeObj = $.fn.zTree.getZTreeObj( _treeId );
                    // treeObj.addNodes(treeNode, {id:model.id , name: model.name, iconSkin:"department_icon"}); //生成一个节点
                     treeObj.reAsyncChildNodes(null, "refresh");
@@ -153,6 +154,7 @@
             var nodes = treeObj.getNodes();
             if (nodes.length>0) {
                 treeObj.selectNode(nodes[0]);
+                _defaultSelectTreeNodeId = nodes[0]["id"];
             }
         }
     }
@@ -192,7 +194,7 @@
      * 删除回调
      */
     function beforeRemove(treeId, treeNode){
-        if(treeNode.children){
+        if(treeNode.children && treeNode.children.length>0){
             layer.warn("存在子部门，请先删除子部门！");
             return false;
         }
@@ -289,7 +291,8 @@
      * 点击树节点，加载右侧资源
      */
     function onClick(event, treeId, treeNode, clickFlag){
-        dataTableReload(treeNode.id)
+        _defaultSelectTreeNodeId = treeNode.id;
+        dataTableReload(_defaultSelectTreeNodeId);
     }
 
     /*****************************************dataTable **************************************************/
@@ -314,7 +317,6 @@
                 "sClass": "text-center",
                 "data": "id",
                 "render": function (data, type, full, meta) {
-                    var department = full.department;
                     return '<a class="a-button" onclick="editUser(this)"  data-id="' + data + ' ">【编辑】<a />'
                             + '<a class="a-button" onclick="authorize('+ data +')" >【授权】<a />'
 //                            + '<a class="a-button" onclick="editPassword('+ data +')" >【修改密码】<a />'
@@ -323,7 +325,6 @@
                 },
                 "bSortable": false
             }
-
         ],
         language:{
             searchPlaceholder : "姓名、用户名、手机号"
@@ -355,7 +356,7 @@
             var url = _root + "/system/user/add?department="+nodes[0].id +"&departmentName=" + nodes[0].name;
             openForm(url,"用户添加");
         }else{
-            layer.msg("请先选择部门！");
+            layer.ok("请先选择部门！");
         }
     }
 
@@ -364,7 +365,8 @@
      */
     function editUser(e){
         var url = _root + "/system/user/edit?id=" + $(e).data("id");
-        openForm( url ,'用户编辑')
+        openForm( url ,'用户编辑');
+        event.stopPropagation();
     }
 
     /**
@@ -379,8 +381,9 @@
             btn: ['保存', '取消'],
             yes: function(index, layero){
                 var iframeWin = window[layero.find('iframe')[0]['name']];
-                var retrunStatus = iframeWin.save();       //从子iframe页面中获取返回值
-                if(retrunStatus){
+                var retrunResult = iframeWin.save();       //从子iframe页面中获取返回值
+                if(retrunResult){
+                    layer.ok(retrunResult.message);
                     _table.ajax.reload();
                     layer.close(index);         //关闭页面
                 }
@@ -396,7 +399,7 @@
         var url = _root + "/system/user/auth/list";
         $.get(url,{id:userId},function(result){
             // 遍历所有角色
-            var content= '<div class="role-container">';
+            var content= '<div class="role-container"><span style="margin-left: 10px;"></span>';
             for(var i= 0; i<result.length; i++){
                 var role = result[i];
                 var checked = role.users.length > 0 ? "checked" :"" ;
@@ -462,7 +465,7 @@
                },
                success : function(result){
                     if(result.status){
-                        dataTableReload(_defaultSelectTreeNodeId)
+                        dataTableReload(_defaultSelectTreeNodeId); //根据部门id ，刷新表格，
                         layer.ok(result.message)
                     }else{
                         layer.fail(result.message);
@@ -471,6 +474,7 @@
             });
             layer.close(index);
         });
+        event.stopPropagation();
     }
 </script>
 </html>

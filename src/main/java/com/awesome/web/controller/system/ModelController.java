@@ -91,11 +91,28 @@ public class ModelController {
             sysModelService.saveOrUpdate(model);
             return ResultMessage.success("保存成功！",model);
         }catch (Exception e){
-            logger.error("保存或更新模块失败！",e);
+            logger.error("【模块】保存或更新模块失败！",e);
             return ResultMessage.success("保存失败！",model);
         }
-
     }
+
+    /**
+     * 删除模块
+     * @param id
+     * @return
+     */
+    @RequestMapping("delete")
+    @ResponseBody
+    public ResultMessage delete( Long id ){
+        try {
+         //   sysModelService.saveOrUpdate(model);
+            return ResultMessage.success("删除成功！");
+        }catch (Exception e){
+            logger.error("【模块】删除失败！",e);
+            return ResultMessage.success("删除失败！");
+        }
+    }
+
 
     /**
      * 模块简称是否存在
