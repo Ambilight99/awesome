@@ -61,4 +61,19 @@ public interface SysUserService {
      * @return
              */
     List<SysUser> list(SysUser user, DataTableSearch search, boolean subdivision );
+
+    /**
+     * 根据用户id获取所有模块id
+     * @param id
+     * @return
+     */
+    List<Long> findModelsByUserId(Long id);
+
+    /**
+     * 授权模块保存
+     * @param models
+     * @param userId
+     * @return
+     */
+    int modelSave(Long[] models, Long userId);
 }

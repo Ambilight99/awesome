@@ -1,6 +1,7 @@
 package com.awesome.web.service.impl.system;
 
 import com.awesome.web.domain.common.datatable.DataTableSearch;
+import com.awesome.web.domain.system.BaseZTree;
 import com.awesome.web.domain.system.SysDepartment;
 import com.awesome.web.domain.system.SysModel;
 import com.awesome.web.domain.system.SysResource;

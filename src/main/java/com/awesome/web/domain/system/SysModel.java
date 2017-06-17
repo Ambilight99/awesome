@@ -22,6 +22,8 @@ public class SysModel implements Serializable {
     private Long parent;
     /** 排序 */
     private Integer order;
+    /** url */
+    private String url;
     /** 子节点 */
     private List<SysModel> children;
     /** ztree 中是否展开 */
@@ -90,5 +92,13 @@ public class SysModel implements Serializable {
 
     public void setOpen(Boolean open) {
         this.open = open;
+    }
+
+    public String getUrl() {
+        return url;
+    }
+
+    public void setUrl(String url) {
+        this.url = url;
     }
 }

@@ -45,7 +45,7 @@ var layer = $.extend({},window.layer,{
         var defaultE ={
             type: 1,
             maxmin: true,
-            shadeClose: true, //点击遮罩关闭层
+            shadeClose: false, //点击遮罩关闭层
             area : ['800px' , '320px']
         }
         e =$.extend({},defaultE,e);

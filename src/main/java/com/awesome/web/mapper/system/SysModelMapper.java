@@ -28,7 +28,7 @@ public interface SysModelMapper {
      * @param model
      * @return
      */
-    @Insert(" INSERT INTO sys_model( `name`,`abbr`,`description`,`parent`,`order` ) VALUES ( #{name},#{abbr},#{description},#{parent},#{order} )  ")
+    @Insert(" INSERT INTO sys_model( `name`,`abbr`,`description`,`parent`,`url`,`order` ) VALUES ( #{name},#{abbr},#{description},#{parent},#{url},#{order} )  ")
     @Options(useGeneratedKeys = true ,keyProperty = "id")
     int insert(SysModel model);
 
@@ -57,4 +57,11 @@ public interface SysModelMapper {
 
     @Select(" select * from sys_model where abbr= #{abbr} ")
     SysModel findByAbbr(String abbr);
+
+    /**
+     * 用户名id 查询用户拥有的模块
+     * @param userId
+     * @return
+     */
+    List<SysModel> listByUserId( @Param("userId") Long userId);
 }

@@ -74,3 +74,37 @@ html,body{
 .red{
     color:red;
 }
+
+/*****************  menu.ftl 样式   start   **************/
+.nav-right{
+    text-align: right;
+    line-height: 36px;
+    height: 36px;
+}
+
+.nav-right .fa-sign-out{
+    margin-top: 2px;
+    color:#145CCD
+}
+.nav-right .btn-group{
+    margin-right: 10px;
+}
+.user-info{
+    text-align: left;
+}
+.user-info>.dropdown-menu>div{
+    padding: 2px 10px;
+}
+.navbar-brand{
+    color:blue;
+}
+.nav-menu{
+    top:2px;
+}
+.container-title{
+    max-width: 1120px;
+    margin-right: auto;
+    margin-left: auto;
+    background-color: #fff;
+}
+/*****************   menu.ftl 样式   end  **************/

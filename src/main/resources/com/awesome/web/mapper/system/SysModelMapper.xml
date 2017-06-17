@@ -19,10 +19,20 @@
             <if test="parent != null">
                 `parent` = #{parent},
             </if>
+            <if test="url != null">
+                `url` = #{url},
+            </if>
             <if test="order != null">
                 `order` = #{order},
             </if>
         </set>
         where id = #{id}
     </update>
+
+    <!-- 用户名id 查询用户拥有的模块 -->
+    <select id="listByUserId" resultType="com.awesome.web.domain.system.SysModel" >
+        select * from sys_model where id in
+          (SELECT model_id FROM sys_user_model where user_id =#{userId})
+          order by `order` asc
+    </select>
 </mapper>

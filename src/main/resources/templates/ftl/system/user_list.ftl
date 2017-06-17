@@ -19,6 +19,9 @@
     <script type="text/javascript" src="${root}/static/ztree/js/jquery.ztree.exedit.js"></script>   <!--ztree   -->
     <script type="text/javascript" src="${root}/static/layer/layer.js"></script>                    <!--layer弹窗   -->
 </head>
+<style>
+
+</style>
 <body>
     <#include "../common/menu.ftl" />
     <div class="container">
@@ -392,11 +395,40 @@
     }
 
     /**
-     * 打开授权页面
-     * @param userId
+     *  授权
      */
     function authorize(userId){
-        var url = _root + "/system/user/auth/list";
+        var content = '<div class="role-container" style="text-align: center;height: 100px;line-height: 100px;">' +
+                        '<button id="modelAuthorize" class="btn btn-lg" type="button" style="margin-right: 20px" >授权模块</button>' +
+                        '<button id="roleAuthorize" class="btn btn-lg" type="button" style="margin-left: 20px">授权角色</button>' +
+                      '</div>';
+
+        layer.openContent({
+            title: "授权",
+            area: ['400px', '200px'],
+            content: content,
+            btn: ['取消'],
+            success: function(layero, index){
+                $(".layui-layer-btn0").css({"background-color":"#f1f1f1","border":"1px solid #dedede","color":"#333"});
+                $("#modelAuthorize").on("click",function(){
+                    modelAuthorize(userId);
+                    layer.close(index);
+                });
+                $("#roleAuthorize").on("click",function(){
+                    roleAuthorize(userId);
+                    layer.close(index);
+                });
+
+            }
+        });
+    }
+
+    /**
+     * 打开角色授权页面
+     * @param userId
+     */
+    function roleAuthorize(userId){
+        var url = _root + "/system/user/role/list";
         $.get(url,{id:userId},function(result){
             // 遍历所有角色
             var content= '<div class="role-container"><span style="margin-left: 10px;"></span>';
@@ -406,46 +438,82 @@
                 content += ' <label class="checkbox-inline"><input id="roles" type="checkbox" value="'+role.id+'" '+ checked +'>'+role.name+'</label>';
             }
             content +='</div>';
-            openAuthorize(content,"授权",userId);
+
+            //弹出一个页面层
+            layer.openContent({
+                title: "授权角色",
+                area : ['400px' , '200px'],
+                content: content,
+                btn: ['保存', '取消'],
+                yes: function(index, layero){
+                    var roles =[1];
+                    $("#roles:checked").each(function(index,obj){
+                        var roleId = parseInt( $(obj).val() );
+                        if( roleId && $.inArray(roleId, roles)==-1 ){
+                            roles.push(roleId);
+                        }
+                    });
+
+                    //保存用户和角色关系到数据库
+                    $.ajax({
+                        url : _root + '/system/user/role/save',
+                        type: "post",
+                        data : {
+                            userId:userId,
+                            roles:roles
+                        },
+                        success : function(result){
+                            if(result.status){
+                                layer.close(index);         //关闭页面
+                                layer.ok(result.message);
+                            }else{
+                                layer.fail(result.message);
+                            }
+                        }
+                    });
+                }
+            });
+
         });
     }
 
     /**
-     * 打开用户表单
+     *  模块授权
      */
-    function openAuthorize(content,title,userId){
-        //弹出一个页面层
-        layer.openContent({
-            title: title,
-            area : ['400px' , '200px'],
-            content: content,
+    function modelAuthorize(userId){
+        layer.openIframe({
+            title:"授权模块",
+            area : ['300px' , '400px'],
+            content: _root + "/system/user/model?id="+userId ,
             btn: ['保存', '取消'],
-            yes: function(index, layero){
-                var roles =[1];
-                $("#roles:checked").each(function(index,obj){
-                    var roleId = parseInt( $(obj).val() );
-                    if( roleId && $.inArray(roleId, roles)==-1 ){
-                        roles.push(roleId);
-                    }
-                });
-
-                //保存用户和角色关系到数据库
-                $.ajax({
-                    url : _root + '/system/user/role/save',
-                    type: "post",
-                    data : {
-                        userId:userId,
-                        roles:roles
-                    },
-                    success : function(result){
-                        if(result.status){
-                            layer.close(index);         //关闭页面
-                            layer.ok(result.message);
-                        }else{
-                            layer.fail(result.message);
+            yes: function(index,layero){
+                var iframeWin = window[layero.find('iframe')[0]['name']];
+                var retrunNodes = iframeWin.save();       //从子iframe页面中获取返回值
+                if(retrunNodes){
+                    layer.confirm("已选择个 "+retrunNodes.length+" 模块，是否保存？",function(index2){
+                        var models=[];
+                        for(var i =0; i<retrunNodes.length; i++){
+                            models.push(retrunNodes[i]["id"]);
                         }
-                    }
-                });
+                        $.ajax({
+                            url: _root + "/system/user/model/save",
+                            data:{
+                                models : models,
+                                userId : userId
+                            },
+                            type:"post",
+                            success:function(result){
+                                layer.close(index2);             //关闭确认页面
+                                if(result.status){
+                                    layer.ok(result.message);
+                                    layer.close(index);         //关闭树页面
+                                }else{
+                                    layer.fail(result.message);
+                                }
+                            }
+                        })
+                    });
+                }
             }
         });
     }

@@ -55,4 +55,10 @@ public interface SysModelService {
      */
     SysModel findByAbbr(String abbr);
 
+    /**
+     * 根据 用户名id 查询用户拥有的模块
+     * @param userId
+     * @return
+     */
+    List<BaseZTree> listByUserId(Long userId);
 }

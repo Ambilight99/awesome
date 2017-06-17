@@ -1,5 +1,6 @@
 package com.awesome.web.controller.system;
 
+import com.alibaba.fastjson.JSON;
 import com.awesome.web.domain.common.ResultMessage;
 import com.awesome.web.domain.common.datatable.DataTablePage;
 import com.awesome.web.domain.common.datatable.DataTableSearch;
@@ -7,6 +8,7 @@ import com.awesome.web.domain.system.SysRole;
 import com.awesome.web.domain.system.SysUser;
 import com.awesome.web.service.system.SysRoleService;
 import com.awesome.web.service.system.SysUserService;
+import org.apache.ibatis.annotations.Param;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -55,6 +57,40 @@ public class UserController {
         SysUser user = sysUserService.findById(id);
         map.put("user", user);
         return "system/user_form";
+    }
+
+    /**
+     * 跳转到用户模块树
+     * @param map
+     * @param id  用户id
+     * @param name 用户姓名
+     * @return
+     */
+    @RequestMapping("model")
+    public String model(Map map,Long id,String name){
+        List<Long> models = sysUserService.findModelsByUserId(id);
+        map.put("models", JSON.toJSONString(models));
+        map.put("id", id);
+        map.put("name",name);
+        return "system/user_model";
+    }
+
+    /**
+     * 授权模块保存
+     * @param models
+     * @param userId
+     * @return
+     */
+    @RequestMapping("model/save")
+    @ResponseBody
+    public ResultMessage modelSave(@RequestParam("models[]") Long[] models, Long userId){
+        try {
+            sysUserService.modelSave(models,userId);
+            return ResultMessage.success("授权成功！");
+        }catch (Exception e){
+            logger.error("【用户-模块授权】 授权错误！",e);
+            return ResultMessage.fail("授权失败！");
+        }
     }
 
     /**
@@ -114,7 +150,7 @@ public class UserController {
      * @param id 用户id
      * @return
      */
-    @RequestMapping("auth/list")
+    @RequestMapping("role/list")
     @ResponseBody
     public List<SysRole> authList(Map map, Long id){
         List<SysRole> roles = sysRoleService.authorizationByUserId(id);
@@ -132,10 +168,10 @@ public class UserController {
     public ResultMessage roleSave(@RequestParam(value = "roles[]") Long[] roles , Long userId){
         try {
             sysUserService.roleSave(roles,userId);
-            return ResultMessage.success("保存成功！");
+            return ResultMessage.success("授权成功！");
         }catch (Exception e){
-            logger.error("【用户-角色关系】保存或者更新错误！",e);
-            return ResultMessage.fail("保存失败！");
+            logger.error("【用户-角色授权】授权错误！",e);
+            return ResultMessage.fail("授权失败！");
         }
     }
 }

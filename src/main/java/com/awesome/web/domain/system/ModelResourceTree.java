@@ -29,6 +29,7 @@ public class ModelResourceTree extends BaseZTree {
             treeObj.setChildren(new ArrayList<>());
             treeObj.setType(ModelResourceTree.MODEL);
             treeObj.setIconSkin("model_icon");
+            treeObj.setUrl(model.getUrl());
             treeObj.setOrder( model.getOrder() );
         }else if(obj instanceof SysResource){
             SysResource resource = (SysResource) obj;

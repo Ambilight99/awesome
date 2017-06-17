@@ -34,6 +34,13 @@
         </div>
     </div>
     -->
+
+    <div class="form-group">
+        <label for="url" class="col-sm-2">模块路径</label>
+        <div class="col-md-6 col-sm-9">
+            <input type="text" class="form-control validate[maxSize[100]]" id="url" name="url" value="${model.url?default('')}" placeholder="模块路径" />
+        </div>
+    </div>
     <div class="form-group">
         <label for="description" class="col-sm-2">模块介绍</label>
         <div class="col-md-6 col-sm-9">

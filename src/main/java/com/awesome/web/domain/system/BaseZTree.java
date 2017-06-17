@@ -1,15 +1,14 @@
 package com.awesome.web.domain.system;
 
 import ch.qos.logback.core.joran.util.beans.BeanUtil;
+import com.alibaba.druid.util.StringUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.BeanWrapper;
 import org.springframework.beans.BeanWrapperImpl;
 
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * @author adam
@@ -38,6 +37,7 @@ public class BaseZTree implements Serializable {
     private String iconSkin;
     /** 是否默认选中 */
     private Boolean checked;
+    private String url;
 
     /**
      * 将模块或资源bean 转换成树结构bean
@@ -77,6 +77,21 @@ public class BaseZTree implements Serializable {
         curLevel++;
         Iterator<? extends BaseZTree> iterator = list.iterator();
         List<BaseZTree> children = new ArrayList<>();
+
+        //如果rootId为空，取父节点
+        if(StringUtils.isEmpty( rootId )){
+            Set<String> ids = list.stream().map(x-> {return x.getId();}).collect(Collectors.toSet());
+            for(BaseZTree b : list){
+                if( ! ids.contains( b.getParent().toString() )){
+                    b.setOpen(true);
+                    b.setChildren(treeModel( list, b.getId(), curLevel ));
+                    children.add(b);
+                }
+            }
+            return children;
+        }
+
+
         while(iterator.hasNext()){
             //获取子节点元素
             BaseZTree treeObj = iterator.next();
@@ -201,5 +216,13 @@ public class BaseZTree implements Serializable {
 
     public void setpId(String pId) {
         this.pId = pId;
+    }
+
+    public String getUrl() {
+        return url;
+    }
+
+    public void setUrl(String url) {
+        this.url = url;
     }
 }

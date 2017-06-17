@@ -48,7 +48,7 @@ public class SysModelServiceImpl implements SysModelService {
         models.forEach(x->{
             treeObjs.add( ModelResourceTree.convert(x) );
         });
-        return BaseZTree.treeModel(treeObjs,"0",2);
+        return BaseZTree.treeModel(treeObjs,null,2);
     }
 
     /**
@@ -87,7 +87,7 @@ public class SysModelServiceImpl implements SysModelService {
                }
            }
         }
-        return BaseZTree.treeModel(treeObjs,"0",2);
+        return BaseZTree.treeModel(treeObjs,null,2);
     }
 
     /**
@@ -132,5 +132,26 @@ public class SysModelServiceImpl implements SysModelService {
     public SysModel findByAbbr(String abbr) {
         SysModel model = sysModelMapper.findByAbbr(abbr);
         return model;
+    }
+
+    /**
+     * 根据 用户名id 查询用户拥有的模块
+     *
+     * @param userId
+     * @return
+     */
+    @Override
+    public List<BaseZTree> listByUserId(Long userId) {
+        List<SysModel> models = sysModelMapper.listByUserId(userId);
+        //模块bean转换成tree的Bean
+        List<BaseZTree> treeObjs = new ArrayList<>();
+        for(SysModel model : models){
+            // 如果存在根菜单，跳过
+            if(model.getParent()==0){
+                continue;
+            }
+            treeObjs.add( ModelResourceTree.convert(model) );
+        }
+        return  BaseZTree.treeModel(treeObjs,null,2);
     }
 }

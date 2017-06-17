@@ -53,7 +53,6 @@ public class MvcConfig extends WebMvcConfigurerAdapter {
     @Override
     public void addViewControllers(ViewControllerRegistry registry) {
         registry.addViewController("/exception/403").setViewName("/exception/403");
-        registry.addViewController("/index").setViewName("/index");
     }
 
     /**

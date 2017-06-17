@@ -68,6 +68,35 @@ public class SysUserServiceImpl implements SysUserService {
     }
 
     /**
+     * 根据用户id获取所有模块id
+     *
+     * @param id
+     * @return
+     */
+    @Override
+    public List<Long> findModelsByUserId(Long id) {
+        return sysUserMapper.findModelsByUserId(id);
+    }
+
+    /**
+     * 授权模块保存
+     *
+     * @param models
+     * @param userId
+     * @return
+     */
+    @Override
+    public int modelSave(Long[] models, Long userId) {
+        //1 删除 模块和用户关系
+        sysUserMapper.deleteUserModelById(userId);
+        //2 重新建立模块和用户关系
+        if(models.length==0){
+            return 0;
+        }
+        return sysUserMapper.insertUserModel(models,userId);
+    }
+
+    /**
      * 根据id查询用户信息
      *
      * @param id

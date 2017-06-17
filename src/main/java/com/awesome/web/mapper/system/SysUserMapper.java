@@ -6,6 +6,7 @@ import com.awesome.web.domain.system.SysUserRole;
 import org.apache.ibatis.annotations.Delete;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
+import org.apache.ibatis.annotations.Select;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -79,4 +80,28 @@ public interface SysUserMapper {
      * @return
      */
     List<SysUser> listBySearch( @Param("user") SysUser user, @Param("search") DataTableSearch search, @Param("departments") List<Long> departments);
+
+    /**
+     * 根据用户id获取所有模块id
+     * @param id
+     * @return
+     */
+    @Select(" select model_id from sys_user_model where user_id = #{id} ")
+    List<Long> findModelsByUserId(Long id);
+
+    /**
+     * 根据用户id 删除用户模块关系
+     * @param userId
+     * @return
+     */
+    @Delete(" delete from sys_user_model where user_id = #{userId} ")
+    int deleteUserModelById(Long userId);
+
+    /**
+     * 插入用户 模块关系
+     * @param models
+     * @param userId
+     * @return
+     */
+    int insertUserModel(@Param("models") Long[] models, @Param("userId") Long userId);
 }

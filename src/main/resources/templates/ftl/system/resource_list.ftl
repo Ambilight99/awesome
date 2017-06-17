@@ -70,13 +70,13 @@
             removeTitle : "删除",
             renameTitle : "编辑",
             enable: true,
-            showRenameBtn: true,    //默认编辑按钮
+            showRenameBtn: false,    //默认编辑按钮
             showRemoveBtn: showRemoveBtn     //默认删除按钮
         },
         callback: {
             onAsyncSuccess :onAsyncSuccess,  //异步加载成功后触发
             onClick : onClick,               //点击按钮
-            beforeRename : beforeRename ,    //编辑触发
+        //    beforeRename : beforeRename ,    //编辑触发
             beforeRemove : beforeRemove ,    //删除触发
             onDrop : onDrop                  // 移动后回调
         }
@@ -88,18 +88,22 @@
     function addHoverDom(treeId, treeNode) {
         var sObj = $("#" + treeNode.tId + "_span");
         if (treeNode.editNameFlag || $("#addBtn_"+treeNode.tId).length>0) return;
-        var addStr = "<span class='button add' id='addBtn_" + treeNode.tId
-                + "' title='添加子模块' onfocus='this.blur();' ></span>";
-
-        sObj.after(addStr);
+        var addStr = "<span class='button add' id='addBtn_" + treeNode.tId + "' title='添加子模块' onfocus='this.blur();' ></span>";
+        var editStr = "<span class='button edit' id='editBtn_" + treeNode.tId + "' title='编辑' onfocus='this.blur();' ></span>";
+        sObj.after(editStr).after(addStr);
 
         //添加按钮绑定点击事件
         $("#addBtn_"+treeNode.tId).on("click",function(){
             addModel(treeNode);
         });
+        //编辑按钮绑定点击事件
+        $("#editBtn_"+treeNode.tId).on("click",function(){
+            editOpenModel(treeNode);
+        });
     };
     function removeHoverDom(treeId, treeNode) {
         $("#addBtn_"+treeNode.tId).unbind().remove();
+        $("#editBtn_"+treeNode.tId).unbind().remove();
     };
 
     /**
@@ -114,17 +118,30 @@
     }
 
     /**
-     *  弹出模块添加框
+     *  添加模块
      */
     function addModel(treeNode){
+        var url = _root + "/system/model/add?id=" + treeNode.id ;
+        openModel(url, "模块添加",treeNode);
+    }
+
+    /**
+     * 编辑模块
+     */
+    function editOpenModel(treeNode){
+        var url = _root + "/system/model/edit?id=" + treeNode.id ;
+        openModel(url, "模块编辑",treeNode);
+    }
+
+    /**
+     *  弹出模块添加框
+     */
+    function openModel(url,title,treeNode){
         //弹出一个页面层
-        layer.open({
-            type: 2,
+        layer.openIframe({
             title: '模块添加',
-            maxmin: true,
-            shadeClose: true, //点击遮罩关闭层
-            area : ['800px' , '290px'],
-            content: _root + "/system/model/add?id="+ treeNode.id ,
+            area : ['800px' , '320px'],
+            content: url,
             btn: ['保存', '取消'],
             yes: function(index, layero){
                 var iframeWin = window[layero.find('iframe')[0]['name']];

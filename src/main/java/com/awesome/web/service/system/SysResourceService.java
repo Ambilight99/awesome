@@ -1,6 +1,7 @@
 package com.awesome.web.service.system;
 
 import com.awesome.web.domain.common.datatable.DataTableSearch;
+import com.awesome.web.domain.system.BaseZTree;
 import com.awesome.web.domain.system.SysResource;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -66,4 +67,5 @@ public interface SysResourceService {
      * @return
      */
     int move(Long[] ids, Long model);
+
 }

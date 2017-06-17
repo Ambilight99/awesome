@@ -40,7 +40,7 @@
         left join sys_resource re  on rr.resource_id=re.id
         WHERE u.username=#{username}
     </select>
-    
+
     <!-- 根据id查询用户信息 -->
     <select id="findById" resultMap="BaseResultMap">
         select
@@ -55,29 +55,29 @@
             <bind name="searchValue" value="'%'+search.searchValue+'%'" />
         </if>
         select
-            u.* , d.name department_name
+        u.* , d.name department_name
         from sys_user u left join sys_department d on u.department= d.id
         <where>
             <if test="user.name!=null">
                 u.`name` = #{user.name}
             </if>
             <if test="user.username!=null">
-               AND  u.`username` = #{user.username}
+                AND  u.`username` = #{user.username}
             </if>
             <if test="user.sex!=null">
-               AND u.`sex` = #{user.sex}
+                AND u.`sex` = #{user.sex}
             </if>
             <if test="user.email!=null">
-               AND u.`email` = #{user.email}
+                AND u.`email` = #{user.email}
             </if>
             <if test="user.phone!=null">
-               AND u.`phone` = #{user.phone}
+                AND u.`phone` = #{user.phone}
             </if>
             <if test="user.department!=null">
-               AND u.`department` = #{user.department}
+                AND u.`department` = #{user.department}
             </if>
             <if test="user.status!=null">
-               AND u.`status` = #{user.status}
+                AND u.`status` = #{user.status}
             </if>
             <if test="search.searchValue!=null">
                 AND ( u.name like #{searchValue} OR  u.username like  #{searchValue} OR  u.phone like  #{searchValue} )
@@ -88,15 +88,15 @@
     <!-- 根据条件列出所有用户信息 -->
     <select id="listBySearch" resultMap="BaseResultMap">
         <if test="search.searchValue!=null">
-          <bind name="searchValue" value="'%'+search.searchValue+'%'" />
+            <bind name="searchValue" value="'%'+search.searchValue+'%'" />
         </if>
         <foreach collection="departments" item="department" separator=" UNION ALL ">
             select
-                d.name department_name , u.*
+            d.name department_name , u.*
             from sys_department d , sys_user u
             WHERE d.id = #{department}
-              AND u.department= d.id
-              AND u.`status` = 1
+            AND u.department= d.id
+            AND u.`status` = 1
             <if test="search.searchValue!=null">
                 AND ( u.name like #{searchValue} OR  u.username like  #{searchValue} OR  u.phone like  #{searchValue} )
             </if>
@@ -112,9 +112,17 @@
 
     <!--插入用户角色关系 -->
     <insert id="insertUserRole" parameterType="list" >
-      INSERT INTO sys_user_role( user_id, role_id ) VALUES
+        INSERT INTO sys_user_role( user_id, role_id ) VALUES
         <foreach collection="list" item="item" separator=","  >
             ( #{item.userId} , #{item.roleId} )
+        </foreach>
+    </insert>
+
+    <!-- 插入用户 模块关系 -->
+    <insert id="insertUserModel">
+        INSERT  INTO  sys_user_model(user_id,model_id) VALUES
+        <foreach collection="models" item="model" separator="," >
+            ( #{userId} , #{model} )
         </foreach>
     </insert>
 
