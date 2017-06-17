@@ -14,6 +14,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
@@ -173,5 +174,28 @@ public class UserController {
             logger.error("【用户-角色授权】授权错误！",e);
             return ResultMessage.fail("授权失败！");
         }
+    }
+
+
+    /**
+     * form表单验证
+     * @param filedId
+     * @param username
+     * @return
+     */
+    @RequestMapping("formValidate")
+    @ResponseBody
+    public  Object[] usernameUnique(@RequestParam("fieldId") String filedId , @RequestParam("fieldValue") String username){
+        Object[] obj = new Object[2];
+        obj[0] = filedId;
+        int count;
+        try{
+            count = sysUserService.findCountByUsername(username);
+        }catch(Exception e) {
+            count =1;
+            logger.error("【用户】 判断用户名是否唯一错误！",e);
+        }
+        obj[1] = count==0?true:false;
+        return obj;
     }
 }

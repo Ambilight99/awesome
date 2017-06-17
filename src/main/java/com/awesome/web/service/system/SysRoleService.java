@@ -71,4 +71,11 @@ public interface SysRoleService {
      * @return
      */
     int delete(Long id);
+
+    /**
+     * 根据角色名获取角色数量
+     * @param name
+     * @return
+     */
+    int findCountByName(String name);
 }

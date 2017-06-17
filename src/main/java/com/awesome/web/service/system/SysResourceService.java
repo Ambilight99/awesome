@@ -68,4 +68,10 @@ public interface SysResourceService {
      */
     int move(Long[] ids, Long model);
 
+    /**
+     * 根据资源名称查询资源数量
+     * @param name
+     * @return
+     */
+    int findCountByName(String name);
 }

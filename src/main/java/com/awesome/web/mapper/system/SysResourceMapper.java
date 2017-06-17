@@ -104,4 +104,7 @@ public interface SysResourceMapper {
      * @return
      */
     int move(@Param("ids") Long[] ids, @Param("model") Long model);
+
+    @Select("select count(*) from sys_resource where name = #{name} ")
+    int findCountByName(String name);
 }

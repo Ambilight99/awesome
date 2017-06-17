@@ -130,4 +130,26 @@ public class ResourceController {
             return ResultMessage.fail("移动失败！");
         }
     }
+
+    /**
+     * form表单验证
+     * @param filedId
+     * @param name
+     * @return
+     */
+    @RequestMapping("formValidate")
+    @ResponseBody
+    public  Object[] usernameUnique(@RequestParam("fieldId") String filedId , @RequestParam("fieldValue") String name){
+        Object[] obj = new Object[2];
+        obj[0] = filedId;
+        int count;
+        try{
+            count = sysResourceService.findCountByName(name);
+        }catch(Exception e) {
+            count =1;
+            logger.error("【资源】 判断资源名是否唯一错误！",e);
+        }
+        obj[1] = count==0?true:false;
+        return obj;
+    }
 }

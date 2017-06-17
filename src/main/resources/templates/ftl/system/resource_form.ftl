@@ -23,7 +23,7 @@
     <div class="form-group">
         <label for="name" class="col-sm-2">资源名称<span class="red">*</span></label>
         <div class="col-md-6 col-sm-9">
-            <input type="text" class="form-control validate[required,maxSize[20]]" id="name" name="name" value="${resource.name?default('')}" placeholder="资源名称" />
+            <input type="text"  <#if resource.id??>disabled</#if>  class="form-control validate[required,maxSize[20],ajax[ajaxNameUnique]]" id="name" name="name" value="${resource.name?default('')}" placeholder="资源名称" />
         </div>
     </div>
     <div class="form-group">
@@ -49,6 +49,18 @@
     var _root = "${root}";
 
     $(function(){
+        $.extend($.validationEngineLanguage.allRules,
+                {
+                    "ajaxNameUnique": {
+                        'url': _root + '/system/resource/formValidate',
+                        //"extraData": "dt="+(new Date()).getTime(),
+                        //'alertTextOk': '资源名可用',
+                        'alertText': '资源名已存在！',
+                        'alertTextLoad': '资源名验证中...'
+                    }
+                }
+        );
+
         $('#form').validationEngine({
             promptPosition: 'centerRight: -300, 0'
         });

@@ -123,6 +123,17 @@ public class SysResourceServiceImpl implements SysResourceService {
         return  sysResourceMapper.move(ids, model);
     }
 
+    /**
+     * 根据资源名称查询资源数量
+     *
+     * @param name
+     * @return
+     */
+    @Override
+    public int findCountByName(String name) {
+        return sysResourceMapper.findCountByName(name);
+    }
+
 
     /**
      * 递归获取所有的子节点

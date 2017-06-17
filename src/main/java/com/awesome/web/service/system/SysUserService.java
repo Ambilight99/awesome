@@ -76,4 +76,11 @@ public interface SysUserService {
      * @return
      */
     int modelSave(Long[] models, Long userId);
+
+    /**
+     * 根据用户名获取用户总数
+     * @param username
+     * @return
+     */
+    int findCountByUsername(String username);
 }

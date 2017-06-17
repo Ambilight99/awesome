@@ -157,4 +157,26 @@ public class RoleContorller {
         }
     }
 
+    /**
+     * form表单验证
+     * @param filedId
+     * @param name
+     * @return
+     */
+    @RequestMapping("formValidate")
+    @ResponseBody
+    public  Object[] usernameUnique(@RequestParam("fieldId") String filedId , @RequestParam("fieldValue") String name){
+        Object[] obj = new Object[2];
+        obj[0] = filedId;
+        int count;
+        try{
+            count = sysRoleService.findCountByName(name);
+        }catch(Exception e) {
+            count =1;
+            logger.error("【角色】 判断角色名是否唯一错误！",e);
+        }
+        obj[1] = count==0?true:false;
+        return obj;
+    }
+
 }

@@ -104,4 +104,12 @@ public interface SysUserMapper {
      * @return
      */
     int insertUserModel(@Param("models") Long[] models, @Param("userId") Long userId);
+
+    /**
+     * 根据用户名获取用户总数
+     * @param username
+     * @return
+     */
+    @Select(" select count(*) from sys_user where username = #{username} ")
+    int findCountByUsername(String username);
 }

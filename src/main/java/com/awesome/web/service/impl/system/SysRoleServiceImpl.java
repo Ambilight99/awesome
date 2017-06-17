@@ -135,4 +135,15 @@ public class SysRoleServiceImpl implements SysRoleService {
         sysRoleMapper.deleteUserRoleById(id);
         return sysRoleMapper.deleteById(id);
     }
+
+    /**
+     * 根据角色名获取角色数量
+     *
+     * @param name
+     * @return
+     */
+    @Override
+    public int findCountByName(String name) {
+        return sysRoleMapper.findCountByName(name);
+    }
 }

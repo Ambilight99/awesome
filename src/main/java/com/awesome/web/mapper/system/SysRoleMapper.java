@@ -105,4 +105,12 @@ public interface SysRoleMapper {
      */
     @Delete( " delete from sys_role where id = #{id} " )
     int deleteById(Long id);
+
+    /**
+     * 根据角色名获取角色数量
+     * @param name
+     * @return
+     */
+    @Select("select count(*) from sys_role where name = #{name} ")
+    int findCountByName(String name);
 }

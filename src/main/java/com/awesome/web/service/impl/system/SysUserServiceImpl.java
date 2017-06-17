@@ -96,6 +96,11 @@ public class SysUserServiceImpl implements SysUserService {
         return sysUserMapper.insertUserModel(models,userId);
     }
 
+    @Override
+    public int findCountByUsername(String username) {
+        return sysUserMapper.findCountByUsername(username);
+    }
+
     /**
      * 根据id查询用户信息
      *

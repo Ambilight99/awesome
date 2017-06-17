@@ -28,7 +28,7 @@
     <div class="form-group">
         <label for="username" class="col-sm-2">登录名<span class="red">*</span></label>
         <div class="col-md-6 col-sm-9">
-            <input type="text" class="form-control validate[required,custom[onlyLetterNumber],minSize[2],maxSize[10]]" id="username" name="username" value="${user.username?default('')}" placeholder="登录名" />
+            <input type="text"  <#if user.id??>disabled</#if> class="form-control validate[required,custom[onlyLetterNumber],minSize[2],maxSize[10]],ajax[ajaxUserUnique]" id="username" name="username" value="${user.username?default('')}" placeholder="登录名" />
         </div>
     </div>
     <#if !user.id??>
@@ -91,6 +91,18 @@
     var _root = "${root}";
 
     $(function(){
+        $.extend($.validationEngineLanguage.allRules,
+            {
+                "ajaxUserUnique": {
+                    'url': _root + '/system/user/formValidate',
+                    //"extraData": "dt="+(new Date()).getTime(),
+                    //'alertTextOk': '用户名可用',
+                    'alertText': '用户名已存在！',
+                    'alertTextLoad': '用户名验证中...'
+                }
+            }
+        );
+
         $('#form').validationEngine({
             promptPosition: 'centerRight: -300, 0'
         });
