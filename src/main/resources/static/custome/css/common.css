@@ -1,6 +1,6 @@
 html,body{
     height:100%;
-    background: #F5EEFF;
+    background-color: #F5EEFF;
 }
 .container-tree>div, .container-table>div{
     height:100%;
@@ -108,3 +108,12 @@ html,body{
     background-color: #fff;
 }
 /*****************   menu.ftl 样式   end  **************/
+
+/*****************弹窗表单的样式 start *********************/
+.screen-tablet{
+    background-color: #fff!important;
+}
+.screen-tablet>body{
+    background-color: #fff!important;
+}
+/*****************弹窗表单的样式 end *********************/
