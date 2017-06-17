@@ -1,4 +1,10 @@
-# spring-boot 整合 mybatis <br/>
+# spring-boot 整合spring-security mybatis freemarker thymeleaf，前台用到了ztree，datatable，zui <br/>
+
+### 项目开发环境IEDA，  jdk8（使用低于此版本的，需要修改项目中lambda表达式）， <br/>
+
+### 详细的文档还在整理中。。
+
+
 ##  包说明   <br/>
 * config包
   * DruidDBConfig.java　　　配置druid线程池  <br/>
