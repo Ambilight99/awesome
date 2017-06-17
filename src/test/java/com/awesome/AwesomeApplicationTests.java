@@ -9,7 +9,7 @@ import org.springframework.transaction.annotation.Transactional;
 @RunWith(SpringRunner.class)
 @SpringBootTest
 //@Transactional	//添加事务回滚
-public class MybatisDemoApplicationTests {
+public class AwesomeApplicationTests {
 
 	@Test
 	public void contextLoads() {

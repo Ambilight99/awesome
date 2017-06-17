@@ -1,7 +1,6 @@
 package com.awesome.web.mapper;
 
-import com.awesome.MybatisDemoApplicationTests;
-import com.awesome.web.domain.system.SysUser;
+import com.awesome.AwesomeApplicationTests;
 import com.awesome.web.mapper.system.SysUserMapper;
 import org.apache.ibatis.session.SqlSession;
 import org.apache.ibatis.session.SqlSessionFactory;
@@ -14,7 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
  * @Description
  * @create 2017/6/2 10:32
  */
-public class SqlSessionTest extends MybatisDemoApplicationTests{
+public class SqlSessionTest extends AwesomeApplicationTests {
     @Autowired
     private SqlSessionFactory sqlSessionFactory;
 

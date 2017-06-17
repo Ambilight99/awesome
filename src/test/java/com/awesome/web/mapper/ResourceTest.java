@@ -1,19 +1,15 @@
 package com.awesome.web.mapper;
 
-import com.awesome.MybatisDemoApplicationTests;
+import com.awesome.AwesomeApplicationTests;
 import com.awesome.web.domain.common.datatable.DataTableSearch;
-import com.awesome.web.domain.system.SysDepartment;
 import com.awesome.web.domain.system.SysResource;
-import com.awesome.web.mapper.system.SysDepartmentMapper;
 import com.awesome.web.mapper.system.SysResourceMapper;
-import com.awesome.web.service.system.SysRoleService;
 import com.github.pagehelper.PageHelper;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 
 /**
  * @author adam
@@ -21,7 +17,7 @@ import java.util.Objects;
  * @Description
  * @create 2017/6/2 10:32
  */
-public class ResourceTest extends MybatisDemoApplicationTests{
+public class ResourceTest extends AwesomeApplicationTests {
     @Autowired
     private SysResourceMapper sysResourceMapper;
 

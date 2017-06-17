@@ -1,8 +1,7 @@
 package com.awesome.web;
 
-import com.awesome.MybatisDemoApplicationTests;
+import com.awesome.AwesomeApplicationTests;
 import com.awesome.web.domain.common.datatable.DataTableSearch;
-import com.awesome.web.domain.system.SysDepartment;
 import com.awesome.web.domain.system.SysUser;
 import com.awesome.web.mapper.system.SysUserMapper;
 import org.junit.Test;
@@ -16,7 +15,7 @@ import java.util.*;
  * @Description User测试
  * @create 2017/6/15 8:27
  */
-public class UserTest extends MybatisDemoApplicationTests {
+public class UserTest extends AwesomeApplicationTests {
 
     @Autowired
     private SysUserMapper sysUserMapper;
