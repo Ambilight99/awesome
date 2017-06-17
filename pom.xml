@@ -4,11 +4,11 @@
 	<modelVersion>4.0.0</modelVersion>
 
 	<groupId>com.awesome</groupId>
-	<artifactId>mybatis-demo</artifactId>
+	<artifactId>awesome</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<packaging>jar</packaging>
 
-	<name>mybatis-demo</name>
+	<name>awesome</name>
 	<description>Demo project for Spring Boot</description>
 
 	<parent>
