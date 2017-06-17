@@ -46,6 +46,7 @@ public class SysModelServiceImpl implements SysModelService {
         List<SysModel> models = sysModelMapper.list();
         List<ModelResourceTree> treeObjs = new ArrayList<>();
         models.forEach(x->{
+            x.setUrl("");
             treeObjs.add( ModelResourceTree.convert(x) );
         });
         return BaseZTree.treeModel(treeObjs,null,2);
