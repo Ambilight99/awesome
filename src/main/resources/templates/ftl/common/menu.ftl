@@ -58,7 +58,7 @@
                 <div class="dropdown-menu pull-right" >
                     <div style=" max-height:200px; overflow-y: scroll;" >
                         <div>
-                             ${Session.SPRING_SECURITY_CONTEXT.authentication.principal.id!""}
+                             ${Session.SPRING_SECURITY_CONTEXT.authentication.principal.name!""}
                         </div>
                         <div>
                             陆奇毕业于复旦大学，获计算机科学学士、硕士学位，此后就读于卡耐基梅隆大学，获计算机科学博士学位。陆奇博士除了在学术界发表过一系列高质量的研究论文，还持有40多项美国专利。1998年，陆奇加入雅虎公司，2007年晋升为雅虎执行副总裁。2008年8月，陆奇离开雅虎，并于次年1月正式加盟微软任网络服务集团总裁，2013年出任微软集团全球执行副总裁，2016年9月宣布从微软离职。
