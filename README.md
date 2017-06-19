@@ -1,8 +1,51 @@
-# spring-boot 整合spring-security mybatis freemarker thymeleaf，前台用到了ztree，datatable，zui <br/>
+# spring-boot 整合spring-security mybatis ( freemarker/thymeleaf)，前台用到了ztree，datatable，zui <br/>
 
 ### 项目开发环境IEDA，  jdk8（使用低于此版本的，需要修改项目中lambda表达式），sql文件在resources/sql目录下面 <br/>
 
 ### 详细的文档还在整理中。。
+
+
+
+## spring Secrity 流程说明
+springSecurity执行流程
+	
+整个程序执行的过程如下：
+
+1、容器启动时
+   通过MyInvocationSecurityMetadataSource # loadResourceDefine 加载系统资源与权限列表resourceMap(一个Map结构，资源[url]为key，权限[auth]为value )
+   
+2、WEB服务器启动，加载security内置的过滤器链，
+   HttpSessionContextIntegrationFilter 
+   LogoutFilter
+   AuthenticationProcessingFilter
+   DefaultLoginPageGeneratingFilter
+   BasicProcessingFilter
+   SecurityContextHolderAwareRequestFilter
+   RememberMeProcessingFilter
+   AnonymousProcessingFilter
+   ExceptionTranslationFilter
+   SessionFixationProtectionFilter
+   FilterSecurityInterception
+ 
+   自定义过滤器拦截请求 MyFilterSecurityInterceptor ，并设置在FilterSecurityInterception之前拦截。
+   给自定义过滤器，注入参数（MyInvocationSecurityMetadataSource,MyAccessDecisionManager，MyUserDetailService）
+
+3、用户登陆
+   通过 AuthenticationManager 对用户输入的用户名和密码，然后根据用户定义的密码算法和盐值等进行计算并和数据库比对。
+   
+4、如果验证成功 
+   通过MyUserDetailsService # loadUserByUsername
+   生成UserDetails供Spring Security使用。
+   
+5、当用户点击某个功能（URL）时。
+   通过MyAccessDecisionManager # decide
+   根据URl取得 系统资源与权限列表 resourceMap 中的权限集合。与登录用户的权限集合进行循环对比，如果存在相同权限，代表用户具有访问该资源的权利。
+
+http://blog.csdn.net/qq_15042899/article/details/73467049
+
+
+
+
 
 
 ##  包说明   <br/>
@@ -16,7 +59,7 @@
 * resolve包
   * MyThymeleafViewResolver.java　　　自定义的视图解析器，用于设置thymeleafViewResolve的优先级高于freemarkerViewResolver <br/>
 * security包  用于集成spring-security
-  * WebSecurityConfig     <br/>
+  * WebSecurityConfig.java <br/>
   * MyInvocationSecurityMetadataSourceService.java <br/>
   * MyAccessDecisionManager.java <br/>
   * MyUserDetailService.java  <br/>
