@@ -41,6 +41,8 @@ springSecurity执行流程
    通过MyAccessDecisionManager # decide
    根据URl取得 系统资源与权限列表 resourceMap 中的权限集合。与登录用户的权限集合进行循环对比，如果存在相同权限，代表用户具有访问该资源的权利。
 
+http://blog.csdn.net/qq_15042899/article/details/73467049
+
 
 
 
