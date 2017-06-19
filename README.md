@@ -1,4 +1,4 @@
-# spring-boot 整合spring-security mybatis freemarker thymeleaf，前台用到了ztree，datatable，zui <br/>
+# spring-boot 整合spring-security mybatis ( freemarker/thymeleaf)，前台用到了ztree，datatable，zui <br/>
 
 ### 项目开发环境IEDA，  jdk8（使用低于此版本的，需要修改项目中lambda表达式），sql文件在resources/sql目录下面 <br/>
 
