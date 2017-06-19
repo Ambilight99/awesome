@@ -59,7 +59,7 @@ http://blog.csdn.net/qq_15042899/article/details/73467049
 * resolve包
   * MyThymeleafViewResolver.java　　　自定义的视图解析器，用于设置thymeleafViewResolve的优先级高于freemarkerViewResolver <br/>
 * security包  用于集成spring-security
-  * WebSecurityConfig     <br/>
+  * WebSecurityConfig.java <br/>
   * MyInvocationSecurityMetadataSourceService.java <br/>
   * MyAccessDecisionManager.java <br/>
   * MyUserDetailService.java  <br/>
