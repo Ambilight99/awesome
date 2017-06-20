@@ -28,7 +28,7 @@
     <div class="form-group">
         <label for="username" class="col-sm-2">登录名<span class="red">*</span></label>
         <div class="col-md-6 col-sm-9">
-            <input type="text"  <#if user.id??>disabled</#if> class="form-control validate[required,custom[onlyLetterNumber],minSize[2],maxSize[10]],ajax[ajaxUserUnique]" id="username" name="username" value="${user.username?default('')}" placeholder="登录名" />
+            <input type="text"  <#if user.id??>disabled</#if> class="form-control validate[required,custom[onlyLetterNumber],minSize[2],maxSize[10]]" id="username" name="username" value="${user.username?default('')}" placeholder="登录名" />
         </div>
     </div>
     <#if !user.id??>
@@ -91,27 +91,58 @@
     var _root = "${root}";
 
     $(function(){
-        $.extend($.validationEngineLanguage.allRules,
-            {
-                "ajaxUserUnique": {
-                    'url': _root + '/system/user/formValidate',
-                    //"extraData": "dt="+(new Date()).getTime(),
-                    //'alertTextOk': '用户名可用',
-                    'alertText': '用户名已存在！',
-                    'alertTextLoad': '用户名验证中...'
-                }
-            }
-        );
+//        $.extend($.validationEngineLanguage.allRules,
+//            {
+//                "ajaxUserUnique": {
+//                    'url': _root + '/system/user/formValidate',
+//                    //"extraData": "dt="+(new Date()).getTime(),
+//                    //'alertTextOk': '用户名可用',
+//                    'alertText': '用户名已存在！',
+//                    'alertTextLoad': '用户名验证中...'
+//                }
+//            }
+//        );
 
         $('#form').validationEngine({
             promptPosition: 'centerRight: -300, 0'
         });
+
+        $("#username").on("blur",function(){
+            var value = $(this).val();
+            validateUserNameUnique("username",value)
+        });
     });
+
+
+    function validateUserNameUnique(id,value){
+        var status=false;
+        $.ajax({
+            url :_root + '/system/user/formValidate',
+            data:{
+                fieldId : id,
+                fieldValue: value
+            },
+            async:false,
+            success:function(result){
+                if(!result || !result[1]){
+                    layer.msg("用户名已存在！");
+                }else{
+                    status =true;
+                }
+
+            }
+        });
+        return status;
+    }
 
     /**
      * 保存
      */
     function save(){
+        if( ! validateUserNameUnique("username",$("#username").val())){
+            return;
+        }
+
         if( $('#form').validationEngine('validate') ){
             return formSubmit();
         }

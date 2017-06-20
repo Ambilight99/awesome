@@ -23,7 +23,7 @@
     <div class="form-group">
         <label for="name" class="col-sm-2">资源名称<span class="red">*</span></label>
         <div class="col-md-6 col-sm-9">
-            <input type="text"  <#if resource.id??>disabled</#if>  class="form-control validate[required,maxSize[20],ajax[ajaxNameUnique]]" id="name" name="name" value="${resource.name?default('')}" placeholder="资源名称" />
+            <input type="text"  <#if resource.id??>disabled</#if>  class="form-control validate[required,maxSize[20]]" id="name" name="name" value="${resource.name?default('')}" placeholder="资源名称" />
         </div>
     </div>
     <div class="form-group">
@@ -49,27 +49,57 @@
     var _root = "${root}";
 
     $(function(){
-        $.extend($.validationEngineLanguage.allRules,
-                {
-                    "ajaxNameUnique": {
-                        'url': _root + '/system/resource/formValidate',
-                        //"extraData": "dt="+(new Date()).getTime(),
-                        //'alertTextOk': '资源名可用',
-                        'alertText': '资源名已存在！',
-                        'alertTextLoad': '资源名验证中...'
-                    }
-                }
-        );
+//        $.extend($.validationEngineLanguage.allRules,
+//                {
+//                    "ajaxNameUnique": {
+//                        'url': _root + '/system/resource/formValidate',
+//                        //"extraData": "dt="+(new Date()).getTime(),
+//                        //'alertTextOk': '资源名可用',
+//                        'alertText': '资源名已存在！',
+//                        'alertTextLoad': '资源名验证中...'
+//                    }
+//                }
+//        );
 
         $('#form').validationEngine({
             promptPosition: 'centerRight: -300, 0'
         });
+
+        $("#name").on("blur",function(){
+            var value = $(this).val();
+            validateNameUnique("name",value)
+        });
     });
+
+    function validateNameUnique(id,value){
+        var status=false;
+        $.ajax({
+            url :_root + '/system/resource/formValidate',
+            data:{
+                fieldId : id,
+                fieldValue: value
+            },
+            async:false,
+            success:function(result){
+                if(!result || !result[1]){
+                    layer.msg("角色名已存在！");
+                }else{
+                    status =true;
+                }
+
+            }
+        });
+        return status;
+    }
 
     /**
      * 保存
      */
     function save(){
+        if( ! validateNameUnique("name",$("#name").val())){
+            return;
+        }
+
         if( $('#form').validationEngine('validate') ){
             return formSubmit();
         }
