@@ -3,6 +3,7 @@ package com.awesome;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.builder.SpringApplicationBuilder;
+import org.springframework.boot.web.servlet.ServletComponentScan;
 import org.springframework.boot.web.support.SpringBootServletInitializer;
 import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.context.annotation.EnableAspectJAutoProxy;
@@ -12,6 +13,7 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 @EnableTransactionManagement //开启事务管理 等同于 <tx:annotation-driven />
 @EnableCaching               //开启ehcache缓存
 @EnableAspectJAutoProxy		 //开启aop
+@ServletComponentScan        //扫描servlet组件  （如DruidStatViewServlet）
 public class AwesomeApplication extends SpringBootServletInitializer {
 
 	public static void main(String[] args) {
