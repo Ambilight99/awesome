@@ -85,7 +85,7 @@ public class MyInvocationSecurityMetadataSourceService implements FilterInvocati
      */
     @Override
     public Collection<ConfigAttribute> getAttributes(Object object) throws IllegalArgumentException {
-        // object 是一个URL，被用户请求的url。
+        // object 是一个URL，用户请求的url。
         FilterInvocation filterInvocation = (FilterInvocation) object;
         if(resourceMap == null){
             loadResourceDefine();
