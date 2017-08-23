@@ -1,10 +1,15 @@
 package com.awesome.util;
 
+import com.alibaba.druid.util.StringUtils;
 import com.awesome.web.domain.system.SysDepartment;
+import org.springframework.beans.BeanWrapper;
+import org.springframework.beans.BeanWrapperImpl;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 /**
  * @author adam
@@ -51,5 +56,77 @@ public class TreeUtil{
 //        ids.addAll( getAllChildren(childrenIds,departments) );
 //        return ids;
 //    }
+
+
+    /**
+     *
+     * @param list 需要进行树结构 的集合
+     * @param <T>
+     * @return
+     */
+    public static <T> List<T> tree(List<T> list){
+        return TreeUtil.tree(list, null );
+    }
+
+    /**
+     *
+     * @param list 需要进行树结构 的集合
+     * @param parentId 树机构父节点
+     * @param <T>
+     * @return
+     */
+    public static <T> List<T> tree(List<T> list , String parentId){
+        return TreeUtil.tree(list, parentId , "id", "parentId", "children");
+    }
+
+    /**
+     *
+     * @param list  需要进行树结构 的集合
+     * @param parentId  树机构父节点
+     * @param idField   标识id的字段
+     * @param parentIdField 标识父id的字段
+     * @param childrenField 标识子集合的字段
+     * @param <T>
+     * @return
+     */
+    public static <T> List<T> tree(List<T> list , String parentId, String idField, String parentIdField, String childrenField){
+        List children  = new ArrayList();
+        //parentId，获取所有最高等级父节点
+        if( StringUtils.isEmpty(parentId) ){
+            Set<String> ids = list.stream().map(x-> {
+                BeanWrapper beanWrapper = new BeanWrapperImpl(x);
+                return beanWrapper.getPropertyValue(idField).toString();
+            }).collect(Collectors.toSet());
+            System.out.println(ids);
+            for(T obj : list){
+                BeanWrapper beanWrapper = new BeanWrapperImpl(obj);
+                String beanId = beanWrapper.getPropertyValue(idField).toString();
+                String beanParentId = beanWrapper.getPropertyValue(parentIdField).toString();
+                if( ! ids.contains( beanParentId )){
+                    beanWrapper.setPropertyValue(childrenField,tree( list, beanId) );
+                    children.add(obj);
+                }
+            }
+        }else{
+            for(T obj : list){
+                BeanWrapper beanWrapper = new BeanWrapperImpl(obj);
+                String beanId = beanWrapper.getPropertyValue(idField).toString();
+                String beanParentId = beanWrapper.getPropertyValue(parentIdField).toString();
+                List beanChildren = (List)beanWrapper.getPropertyValue(childrenField);
+                if(Objects.equals(beanParentId, parentId )){
+                    children.add(obj);
+                    if( beanChildren ==null ){
+                        beanWrapper.setPropertyValue(childrenField,tree(list,beanId));
+                    }else{
+                        List newObjChildren = tree(list,beanId );
+                        newObjChildren.addAll(beanChildren );
+                        beanWrapper.setPropertyValue(childrenField,newObjChildren);
+                    }
+                }
+            }
+        }
+        return  children;
+    }
+
 
 }
